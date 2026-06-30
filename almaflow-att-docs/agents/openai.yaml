@@ -1,0 +1,7 @@
+interface:
+  display_name: "almaFlow_att_docs"
+  short_description: "Sincroniza docs do AlMaFlow"
+  default_prompt: "Use $almaflow-att-docs para atualizar os documentos do AlMaFlow conforme a decisao de negocio ou divergencia encontrada."
+
+policy:
+  allow_implicit_invocation: true
