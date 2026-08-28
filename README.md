@@ -1,7 +1,7 @@
 # my-claude-skills
 
 Coleção pessoal de [Agent Skills](https://docs.claude.com/en/docs/claude-code/skills) para Claude Code.
-**30 skills.**
+**38 skills.**
 
 ## Instalação
 
@@ -12,13 +12,24 @@ git clone https://github.com/matheus3006/my-claude-skills.git
 cp -R my-claude-skills/<skill> ~/.claude/skills/
 ```
 
+As oito skills `*-prototipo` compartilham arquivos de apoio que ficam fora de `skills/`.
+Copie a pasta `prototipo-html/` junto:
+
+```bash
+cp -R my-claude-skills/prototipo-html ~/.claude/
+```
+
+Sem ela as skills apontam para um caminho que não existe na sua máquina.
+
 ## Skills
 
 | Skill | Descrição |
 |---|---|
 | [`adaptive-communication`](adaptive-communication/) | Use when detecting ambiguous user intent, hedging language, open-ended framing, personal context before requests, or when unsure whether user wants explorati… |
+| [`ajustar-detalhe-prototipo`](ajustar-detalhe-prototipo/) | Constrói uma ferramenta interativa com sliders, arrasto e guias visuais para o usuário escolher ele mesmo valores visuais exatos — posição, espaçamento, tamanh… |
 | [`almaflow-att-docs`](almaflow-att-docs/) | Sincroniza docs_almaFlow com decisoes de negocio e divergencias entre implementacao, MVP_Fila_Virtual.md e Arquitetura_Fila_Virtual.md. Use quando citar alma… |
 | [`almaflow-figma-component`](almaflow-figma-component/) | Use ao criar ou editar ComponentSets/Components na library `almaFlow` do Figma do AlMaFlow (file `ef4cdtGuwgovAERD3kMhHg`, Components page `10:5`) via `use_f… |
+| [`auditar-prototipo`](auditar-prototipo/) | Audita um protótipo HTML+JSX contra o checklist de qualidade e devolve um relatório PASS/FAIL por item — ordem de carregamento, cache-bust, tokens, 8 estados v… |
 | [`bencium-controlled-ux-designer`](bencium-controlled-ux-designer/) | Expert UI/UX design guidance for unique, accessible interfaces. Use for visual decisions, colors, typography, layouts. Always ask before making design decisi… |
 | [`bencium-impact-designer`](bencium-impact-designer/) | Create distinctive, production-grade frontend interfaces with high design quality. Use this skill when the user asks to build web components, pages, or appli… |
 | [`bencium-innovative-ux-designer`](bencium-innovative-ux-designer/) | Create distinctive, production-grade frontend interfaces with high design quality. Use this skill when the user asks to build web components, pages, or appli… |
@@ -33,9 +44,15 @@ cp -R my-claude-skills/<skill> ~/.claude/skills/
 | [`handoff`](handoff/) | Compact the current conversation into a handoff document for another agent to pick up. argument-hint: "What will the next session be used for?" |
 | [`human-architect-mindset`](human-architect-mindset/) | Systematic architectural thinking for irreplaceable human capabilities - domain modeling, systems thinking, constraint navigation, and AI-aware problem decom… |
 | [`improve-codebase-architecture`](improve-codebase-architecture/) | Find deepening opportunities in a codebase, informed by the domain language in CONTEXT.md and the decisions in docs/adr/. Use when the user wants to improve… |
+| [`iniciar-prototipo`](iniciar-prototipo/) | Sobe o servidor HTTP local de um protótipo HTML+JSX e abre no browser. Use quando o usuário pedir para rodar, servir, abrir, subir ou ver o protótipo, ou quand… |
+| [`integrar-ao-prototipo`](integrar-ao-prototipo/) | Adiciona uma tela, fluxo ou funcionalidade nova a um protótipo HTML+JSX que já existe, reusando os primitivos e tokens dele. Use quando o usuário pedir para in… |
+| [`melhorar-prototipo`](melhorar-prototipo/) | Refina uma tela que já está no protótipo HTML+JSX — hierarquia visual, espaçamento, tipografia, microcopy, paleta, estados faltando, acessibilidade. Use quando… |
 | [`multi-agent`](multi-agent/) | Orquestra tarefas decomponíveis em múltiplos agentes paralelos combinando Codex CLI (gpt-5.4 high) para trabalho mecânico, Sonnet 4.6 via Bash launcher (buck… |
+| [`novo-prototipo`](novo-prototipo/) | Cria um protótipo HTML+JSX do zero (React 18 + Babel standalone, zero build step) quando ainda não existe protótipo para a tela ou fluxo. Use ao iniciar uma te… |
+| [`portar-prototipo`](portar-prototipo/) | Traduz um protótipo HTML+JSX aprovado para a stack real do projeto — mapeia componente para arquivo, token do protótipo para o tema da stack, e gera o plano de… |
 | [`prototype`](prototype/) | Build a throwaway prototype to flesh out a design before committing to it. Routes between two branches — a runnable terminal app for state/business-logic que… |
 | [`setup-matt-pocock-skills`](setup-matt-pocock-skills/) | Sets up an `## Agent skills` block in AGENTS.md/CLAUDE.md and `docs/agents/` so the engineering skills know this repo's issue tracker (GitHub or local markdo… |
+| [`sincronizar-prototipo`](sincronizar-prototipo/) | Reflete uma tela já aprovada no protótipo consolidado (vitrine) para evitar drift, faz o bump do cache-bust em todos os scripts e revalida a ordem de carregame… |
 | [`tdd`](tdd/) | Test-driven development with red-green-refactor loop. Use when user wants to build features or fix bugs using TDD, mentions "red-green-refactor", wants integ… |
 | [`teach`](teach/) | Teach the user a new skill or concept, within this workspace. disable-model-invocation: true argument-hint: "What would you like to learn about?" |
 | [`to-issues`](to-issues/) | Break a plan, spec, or PRD into independently-grabbable issues on the project issue tracker using tracer-bullet vertical slices. Use when user wants to conve… |
@@ -46,3 +63,27 @@ cp -R my-claude-skills/<skill> ~/.claude/skills/
 | [`visual-tuning-prototype`](visual-tuning-prototype/) | Use when a stakeholder keeps requesting precise visual layout changes — "make the logo lower", "put the email near the center", an exact gap/size — that you… |
 | [`write-a-skill`](write-a-skill/) | Create new agent skills with proper structure, progressive disclosure, and bundled resources. Use when user wants to create, write, or build a new skill. |
 | [`zoom-out`](zoom-out/) | Tell the agent to zoom out and give broader context or a higher-level perspective. Use when you're unfamiliar with a section of code or need to understand ho… |
+
+## Família de protótipo
+
+Oito skills que cobrem o ciclo de vida de um protótipo HTML+JSX (React 18 + Babel via CDN,
+sem build step). O protótipo faz o papel do Figma: é a fonte de verdade visual antes de
+escrever código na stack real.
+
+| Quando usar | Skill |
+|---|---|
+| Ainda não existe protótipo para a tela | [`novo-prototipo`](novo-prototipo/) |
+| Rodar o protótipo e abrir no browser | [`iniciar-prototipo`](iniciar-prototipo/) |
+| Somar uma tela ou fluxo ao que já existe | [`integrar-ao-prototipo`](integrar-ao-prototipo/) |
+| A tela está feia, confusa ou faltando estado | [`melhorar-prototipo`](melhorar-prototipo/) |
+| Acertar um valor específico de posição ou espaçamento | [`ajustar-detalhe-prototipo`](ajustar-detalhe-prototipo/) |
+| Verificar contra o checklist antes de aprovar | [`auditar-prototipo`](auditar-prototipo/) |
+| Refletir a tela aprovada no protótipo consolidado | [`sincronizar-prototipo`](sincronizar-prototipo/) |
+| Traduzir o protótipo aprovado para a stack real | [`portar-prototipo`](portar-prototipo/) |
+
+Arquivos de apoio, compartilhados pelas oito:
+
+- [`prototipo-html/references/convencoes.md`](prototipo-html/references/convencoes.md) — o contrato: estrutura de pastas, ordem de carregamento, regra de tokens
+- [`prototipo-html/references/checklist-qualidade.md`](prototipo-html/references/checklist-qualidade.md) — o roteiro da auditoria
+- [`prototipo-html/references/deteccao-projeto.md`](prototipo-html/references/deteccao-projeto.md) — como descobrir a stack e a paleta do projeto
+- [`prototipo-html/template/`](prototipo-html/template/) — o scaffold que `novo-prototipo` copia
