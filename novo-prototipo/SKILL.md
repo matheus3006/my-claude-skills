@@ -11,6 +11,11 @@ Zero build step: React 18 + Babel standalone via CDN, abre no browser e funciona
 **Leia primeiro:** `~/.claude/prototipo-html/references/convencoes.md` — é o contrato.
 Não improvise estrutura, ordem de carregamento ou tokens.
 
+**Onde isto se encaixa.** Se o protótipo nasceu de um ticket de decisão do `/wayfinder`, a
+resposta do ticket é a decisão visual — e a aprovação que o `/portar-prototipo` vai exigir
+depois. Se nasceu solto, o caminho é o mesmo, só sem o mapa por cima. O fluxo completo, da
+ideia solta até o código, está em [FLUXOS.md](https://github.com/matheus3006/my-claude-skills/blob/main/FLUXOS.md).
+
 ## Antes de qualquer coisa: existe protótipo?
 
 Liste a raiz de protótipos do projeto. Se já existir um protótipo cobrindo a área:

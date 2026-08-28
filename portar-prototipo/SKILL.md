@@ -118,6 +118,12 @@ o motivo. Divergência silenciosa é como o design drifta.
 Se o projeto mantém protótipo consolidado (vitrine), use `/sincronizar-prototipo` para
 refletir a tela aprovada lá.
 
+**Se a implementação não cabe em uma sessão.** Pare depois do plano do Passo 4 e leve as duas
+tabelas de mapeamento para o `/to-prd`: elas viram a seção de decisões de implementação do PRD,
+que o `/to-issues` fatia em issues, cada uma construída por um `/implement` em sessão limpa.
+O protótipo continua sendo a referência visual de cada uma dessas sessões — Passo 6 (screenshot
+lado a lado) vale por issue, não só no fim. Fluxo completo: [FLUXOS.md](https://github.com/matheus3006/my-claude-skills/blob/main/FLUXOS.md).
+
 ## Anti-padrões
 
 - Portar sem aprovação explícita
