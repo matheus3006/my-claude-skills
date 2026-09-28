@@ -134,7 +134,7 @@ cresce com o número de telas, então nunca corta nem empurra controle para fora
 **Painel de controle flutuante** (`painel.jsx`) — canto inferior direito, fechado
 mostrando o estado ativo (`iOS · Escuro · loading`), expandindo para:
 
-- **Superfície** — Desktop · Tablet · iOS · Android
+- **Superfície** — só as da plataforma da visão ativa: App → iOS · Android; Web → Desktop · Tablet
 - **Tema** — Claro · Escuro
 - **Estado** — os 8 estados visuais, aplicados à tela ativa
 - **Reset** — volta aos defaults e limpa a rota
@@ -149,10 +149,26 @@ e some justamente o controle de tema, que é o que menos se pode perder.
 navega; abas mentiriam sobre o fluxo. Modo Showcase troca para a grade com todas as
 telas lado a lado, para revisão de conjunto.
 
-**Superfícies estão sempre disponíveis**, inclusive em projeto web: ver a tela no
-celular é parte da revisão, não exclusividade de app nativo. Mobile e tablet renderizam
-dentro de device frame (status bar, dynamic island, home indicator, safe area) e escalam
-para caber; desktop ocupa o viewport livre.
+**Cada visão mostra só as telas da sua plataforma.** Uma visão é uma persona (ou perfil)
+numa plataforma: "Morador · App", "Síndico · Web". Na visão App, palco e grade do Showcase
+mostram **só** telas de App, em moldura de celular (iOS ou Android); na visão Web, **só**
+telas de Web, em moldura de navegador (Desktop ou Tablet). Nunca misturar telas de
+desktop com telas de iPhone na mesma grade — a revisão de uma plataforma não pode tropeçar
+na outra (referência: cadillac-prototipos.vercel.app, uma aba por visão com Showcase próprio).
+
+Consequências práticas:
+
+- Quem usa mais de uma plataforma (ex.: síndico na Web e no App) ganha um seletor de
+  plataforma no header, ao lado do modo — só aparece quando a persona tem as duas.
+- O seletor de Superfície do painel oferece só as superfícies da plataforma ativa.
+- Navegar para uma tela de outra plataforma troca a visão junto; a grade filtra pela
+  plataforma ativa.
+- Tela que existe nas duas plataformas (ex.: login) entra uma vez em cada visão, na
+  moldura certa. Telas "gêmeas" de um mesmo posto (ex.: Web da guarita + celular do
+  porteiro) são duas visões, não um par lado a lado.
+
+Mobile e tablet renderizam dentro de device frame (status bar, dynamic island, home
+indicator, safe area) e escalam para caber; desktop entra em moldura de navegador.
 
 **ErrorBoundary** envolve a tela ativa e cada tile da grade — tela quebrada não derruba
 o showcase, e o boundary mostra o stack em vez de deixar em branco.

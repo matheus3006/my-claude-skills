@@ -45,8 +45,14 @@ de justificativa; o padrão é migrar para token.
 Estado só conta se der para **ver no showcase**, sem editar código — pelo seletor de
 Estado do painel flutuante, aplicado à tela ativa.
 
-Confira também as superfícies: cada tela precisa se comportar em Desktop, Tablet, iOS e
-Android. Layout que só fecha em desktop é achado de auditoria, não detalhe.
+Confira também as superfícies de cada visão: telas de App em iOS e Android; telas de Web
+em Desktop e Tablet. Conteúdo cortado ou scroll horizontal dentro da moldura é FAIL.
+
+- [ ] **Visão por plataforma** — na visão App, palco e grade do Showcase só têm telas de
+      App (moldura de celular); na visão Web, só telas de Web (moldura de navegador).
+      Tela de desktop misturada com tela de iPhone na mesma grade é FAIL.
+- [ ] Persona com mais de uma plataforma tem seletor de plataforma; o painel só oferece
+      as superfícies da plataforma ativa.
 
 ## 4. Acessibilidade
 

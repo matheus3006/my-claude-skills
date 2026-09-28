@@ -61,9 +61,10 @@ Suba com `/iniciar-prototipo` e, pelo preview MCP, cubra as seções 3, 4 e 6.
 der para ver no showcase sem editar código. Confira que `empty` tem CTA, `error` tem
 ação de recuperação e `loading` não causa layout shift ao resolver.
 
-**Superfícies** — pelo painel, percorra Desktop, Tablet, iOS e Android. Conteúdo cortado
-ou scroll horizontal dentro do device frame é FAIL. Vale para projeto web também: a tela
-vai ser aberta no celular independentemente da stack.
+**Superfícies e visões** — para cada visão (persona × plataforma), percorra as superfícies
+dela pelo painel: App em iOS e Android; Web em Desktop e Tablet. Conteúdo cortado ou scroll
+horizontal dentro da moldura é FAIL. Abra o Showcase de cada visão: tela de outra
+plataforma na grade (ex.: desktop no meio das telas de iPhone) é FAIL.
 
 **Temas** — alterne Claro e Escuro no painel. Troca de tema não pode quebrar layout nem
 apagar texto.

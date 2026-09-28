@@ -82,8 +82,12 @@ Os três que somem quando se tem pressa, e que são justamente os que a implemen
 precisar: **empty** (ícone + copy + CTA), **error** (mensagem clara + recuperação),
 **loading** (skeleton na mesma caixa do conteúdo, sem layout shift).
 
-Confira também as quatro superfícies. Mesmo em projeto web, a tela vai ser aberta no
-celular — o device frame mobile não é enfeite de app nativo, é como se revisa responsivo.
+**Uma visão por plataforma.** Se o produto tem mais de uma plataforma ou persona (ex.:
+morador no App, síndico na Web e no App), cada visão tem Showcase próprio e só mostra as
+telas da sua plataforma: visão iPhone só com telas de iPhone, visão desktop só com telas
+de desktop — nunca misturadas na mesma grade. Persona com duas plataformas ganha seletor
+de plataforma no header; o painel só oferece as superfícies da plataforma ativa (App →
+iOS/Android; Web → Desktop/Tablet). Ver "Showcase" em `convencoes.md`.
 
 ## Passo 5 — Servir e verificar você mesmo
 
