@@ -1,0 +1,441 @@
+<!doctype html>
+<!-- MODELO da skill mapa-visual. NÃO EDITAR por mapa: tudo que muda entre mapas vem de mapa.json. Três variantes, trocadas por ?variant=A|B|C. -->
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mapa visual</title>
+<style>
+:root {
+  --fundo: #f6f5f1; --superficie: #ffffff; --superficie-2: #efede6; --texto: #1d1c19; --texto-2: #5b5850; --borda: #dcd8cc;
+  --j1: #a8324a; --j2: #b4531f; --j3: #2f6b9a; --j4: #2e7d5b; --j5: #7a4fa3; --j6: #6b6b6b; --j7: #0f7c86; --j8: #8a6d00;
+  --trava: #b3261e; --trava-fundo: #fbe9e7; --corrigir: #8a5a00; --corrigir-fundo: #fff4d6; --pronto: #1f7a45; --pronto-fundo: #e3f4ea;
+  --nova: #1f7a45; --alterada: #8a5a00; --sombra: 0 1px 2px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.06);
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --fundo: #151513; --superficie: #1f1e1b; --superficie-2: #292824; --texto: #ecebe6; --texto-2: #a9a69c; --borda: #3a3934;
+  --j1: #e0708a; --j2: #e48a55; --j3: #6fa8d6; --j4: #62b891; --j5: #b08ad6; --j6: #9a9a9a; --j7: #4fc3cc; --j8: #d9b84a;
+  --trava: #ff8a80; --trava-fundo: #3a1d1b; --corrigir: #f0c24b; --corrigir-fundo: #332a12; --pronto: #6fcf97; --pronto-fundo: #17301f;
+  --nova: #6fcf97; --alterada: #f0c24b; --sombra: 0 1px 2px rgba(0,0,0,.4), 0 4px 16px rgba(0,0,0,.3);
+} }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--fundo); color: var(--texto); font: 15px/1.5 ui-sans-serif, -apple-system, "Segoe UI", Roboto, sans-serif; padding-bottom: 96px; }
+header.topo { padding: 28px 24px 8px; max-width: 1400px; margin: 0 auto; }
+h1 { font-size: 26px; margin: 0 0 4px; letter-spacing: -.01em; }
+.sub { color: var(--texto-2); margin: 0; max-width: 820px; }
+.legenda { display: flex; flex-wrap: wrap; gap: 14px; margin: 14px 0 0; font-size: 13px; color: var(--texto-2); }
+.legenda span { display: inline-flex; align-items: center; gap: 6px; }
+.ponto { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+main { max-width: 1400px; margin: 0 auto; padding: 8px 24px 24px; }
+.alertas { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 10px; margin: 16px 0 20px; }
+.alerta { border-radius: 10px; padding: 12px 14px; font-size: 13.5px; border: 1px solid transparent; }
+.alerta.trava { background: var(--trava-fundo); border-color: color-mix(in srgb, var(--trava) 35%, transparent); }
+.alerta.corrigir { background: var(--corrigir-fundo); border-color: color-mix(in srgb, var(--corrigir) 30%, transparent); }
+.alerta strong { display: block; margin-bottom: 2px; }
+.alerta .etiqueta { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; font-weight: 700; }
+.alerta.trava .etiqueta { color: var(--trava); } .alerta.corrigir .etiqueta { color: var(--corrigir); }
+.chip { display: inline-block; font-size: 12px; padding: 1px 8px; border-radius: 999px; background: var(--superficie-2); color: var(--texto-2); margin: 2px 4px 2px 0; cursor: pointer; border: 1px solid var(--borda); }
+.chip:hover { color: var(--texto); }
+.selo { font-size: 11px; font-weight: 700; padding: 1px 7px; border-radius: 6px; text-transform: uppercase; letter-spacing: .04em; }
+.selo.pronto { background: var(--pronto-fundo); color: var(--pronto); }
+.selo.falso-pronto { background: var(--trava-fundo); color: var(--trava); }
+.selo.prd-a-escrever, .selo.needs-triage { background: var(--corrigir-fundo); color: var(--corrigir); }
+.selo.decisao, .selo.tarefa { background: var(--superficie-2); color: var(--texto-2); }
+.etiqueta-gh { display: inline-flex; align-items: center; font-size: 11px; font-weight: 600; line-height: 18px; padding: 0 8px; border-radius: 999px; white-space: nowrap; border: 1px solid rgba(0,0,0,.12); }
+.linha-etiquetas-gh { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 5px; }
+.legenda-gh { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: 10px; font-size: 12px; color: var(--texto-2); }
+code, .rota { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 12.5px; }
+
+/* ---------- Variante A: grafo ---------- */
+.grafo { position: relative; display: grid; grid-template-columns: 170px repeat(5, minmax(190px, 1fr)); gap: 0; background: var(--superficie); border: 1px solid var(--borda); border-radius: 14px; overflow-x: auto; box-shadow: var(--sombra); }
+.grafo .cab-onda { padding: 12px 12px 10px; border-bottom: 1px solid var(--borda); border-left: 1px solid var(--borda); background: var(--superficie-2); }
+.grafo .cab-onda b { display: block; font-size: 13px; } .grafo .cab-onda small { color: var(--texto-2); font-size: 12px; line-height: 1.35; display: block; }
+.grafo .cab-jornada { padding: 12px; border-bottom: 1px solid var(--borda); font-weight: 600; font-size: 13px; display: flex; align-items: flex-start; gap: 8px; }
+.grafo .celula { padding: 10px; border-bottom: 1px solid var(--borda); border-left: 1px solid var(--borda); display: flex; flex-direction: column; gap: 8px; min-height: 64px; }
+.grafo .canto { background: var(--superficie-2); border-bottom: 1px solid var(--borda); }
+.no { position: relative; z-index: 2; background: var(--superficie); border: 1.5px solid var(--borda); border-left: 5px solid var(--cor-jornada); border-radius: 9px; padding: 8px 10px; cursor: pointer; font-size: 13px; line-height: 1.3; transition: transform .12s, box-shadow .12s, opacity .12s; }
+.no:hover { transform: translateY(-1px); box-shadow: var(--sombra); }
+.no .num { color: var(--texto-2); font-size: 11.5px; }
+.no .linha-selos { margin-top: 5px; display: flex; gap: 4px; flex-wrap: wrap; }
+.no.apagado { opacity: .25; } .no.foco { box-shadow: 0 0 0 3px color-mix(in srgb, var(--cor-jornada) 45%, transparent); }
+.no.aceso-sobe { outline: 2px solid var(--trava); } .no.aceso-desce { outline: 2px dashed var(--pronto); }
+svg.arestas { position: absolute; inset: 0; pointer-events: none; z-index: 1; overflow: visible; }
+svg.arestas path { fill: none; stroke: var(--texto-2); stroke-width: 1.4; opacity: .45; }
+svg.arestas path.inferida { stroke-dasharray: 5 4; }
+svg.arestas path.acesa { opacity: 1; stroke-width: 2.2; stroke: var(--trava); }
+.gaveta { position: fixed; top: 0; right: 0; width: min(480px, 100vw); height: 100vh; background: var(--superficie); border-left: 1px solid var(--borda); box-shadow: -8px 0 30px rgba(0,0,0,.12); padding: 22px 22px 100px; overflow-y: auto; transform: translateX(105%); transition: transform .2s; z-index: 20; }
+.gaveta.aberta { transform: none; }
+.gaveta h2 { font-size: 19px; margin: 6px 0 8px; } .gaveta h3 { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--texto-2); margin: 18px 0 6px; }
+.gaveta ul { margin: 0; padding-left: 18px; } .gaveta li { margin: 3px 0; }
+.fechar { position: absolute; top: 12px; right: 14px; background: none; border: 0; font-size: 22px; cursor: pointer; color: var(--texto-2); }
+
+/* ---------- Variante B: roteiro ---------- */
+.roteiro { max-width: 980px; }
+.passo-onda { display: grid; grid-template-columns: 56px 1fr; gap: 18px; }
+.trilho { display: flex; flex-direction: column; align-items: center; }
+.trilho .bola { width: 44px; height: 44px; border-radius: 50%; background: var(--texto); color: var(--fundo); display: grid; place-items: center; font-weight: 800; font-size: 18px; }
+.trilho .fio { flex: 1; width: 2px; background: var(--borda); margin: 6px 0; }
+.corpo-onda h2 { margin: 6px 0 2px; font-size: 21px; } .corpo-onda > p { margin: 0 0 12px; color: var(--texto-2); }
+.checkpoint { display: flex; gap: 10px; align-items: flex-start; background: var(--superficie-2); border: 1px dashed var(--borda); border-radius: 10px; padding: 10px 12px; margin: 4px 0 30px; font-size: 13.5px; }
+.checkpoint b { white-space: nowrap; }
+.cartao-issue { background: var(--superficie); border: 1px solid var(--borda); border-top: 4px solid var(--cor-jornada); border-radius: 12px; padding: 14px 16px; margin-bottom: 12px; box-shadow: var(--sombra); }
+.cartao-issue .cabecalho { display: flex; justify-content: space-between; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+.cartao-issue h3 { margin: 0; font-size: 16px; } .cartao-issue .quem { font-size: 12px; color: var(--texto-2); }
+.cartao-issue .colunas { display: grid; grid-template-columns: 1.3fr 1fr; gap: 16px; margin-top: 10px; }
+.cartao-issue h4 { margin: 0 0 4px; font-size: 11.5px; text-transform: uppercase; letter-spacing: .06em; color: var(--texto-2); }
+.cartao-issue ul { margin: 0; padding-left: 18px; font-size: 13.5px; } .cartao-issue p { margin: 0 0 6px; font-size: 14px; }
+.grupo-fatias { border: 2px solid var(--cor-grupo); border-radius: 16px; padding: 12px; margin-bottom: 12px; background: color-mix(in srgb, var(--cor-grupo) 5%, transparent); }
+.grupo-fatias > .titulo-grupo { font-weight: 700; color: var(--cor-grupo); margin: 0 4px 10px; }
+@media (max-width: 720px) { .cartao-issue .colunas { grid-template-columns: 1fr; } .passo-onda { grid-template-columns: 36px 1fr; } .trilho .bola { width: 32px; height: 32px; font-size: 14px; } }
+
+/* ---------- Variante C: contrato ---------- */
+.contrato { display: grid; grid-template-columns: 1fr 340px; gap: 20px; align-items: start; }
+@media (max-width: 980px) { .contrato { grid-template-columns: 1fr; } }
+.recurso { background: var(--superficie); border: 1px solid var(--borda); border-radius: 12px; margin-bottom: 14px; overflow: hidden; box-shadow: var(--sombra); }
+.recurso > .nome { padding: 10px 14px; background: var(--superficie-2); font-weight: 700; display: flex; justify-content: space-between; }
+.recurso > .nome small { font-weight: 500; color: var(--texto-2); }
+.linha-rota { display: grid; grid-template-columns: 74px 1fr auto; gap: 10px; padding: 7px 14px; border-top: 1px solid var(--borda); align-items: baseline; font-size: 13.5px; }
+.linha-rota .metodo { font-family: ui-monospace, Menlo, monospace; font-weight: 700; font-size: 12px; }
+.linha-rota.existente { color: var(--texto-2); } .linha-rota.existente .metodo { opacity: .7; }
+.linha-rota.nova { background: color-mix(in srgb, var(--nova) 8%, transparent); } .linha-rota.nova .metodo { color: var(--nova); }
+.linha-rota.alterada { background: color-mix(in srgb, var(--alterada) 10%, transparent); } .linha-rota.alterada .metodo { color: var(--alterada); }
+.linha-rota .indef { font-style: italic; }
+.linha-rota .explica { display: block; font-size: 12.5px; color: var(--texto-2); }
+.lateral h3 { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--texto-2); margin: 0 0 8px; }
+.lateral .bloco { background: var(--superficie); border: 1px solid var(--borda); border-radius: 12px; padding: 12px 14px; margin-bottom: 14px; font-size: 13.5px; }
+.lateral .bloco ul { margin: 0; padding-left: 18px; }
+.filtro-contrato { display: flex; gap: 8px; flex-wrap: wrap; margin: 0 0 14px; }
+.filtro-contrato button { font: inherit; font-size: 13px; padding: 5px 12px; border-radius: 999px; border: 1px solid var(--borda); background: var(--superficie); color: var(--texto); cursor: pointer; }
+.filtro-contrato button[aria-pressed="true"] { background: var(--texto); color: var(--fundo); border-color: var(--texto); }
+
+/* ---------- Barra de variantes (não faz parte do design avaliado) ---------- */
+.barra-prototipo { position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%); z-index: 50; display: flex; align-items: center; gap: 4px; background: #111; color: #fff; border-radius: 999px; padding: 6px; box-shadow: 0 6px 24px rgba(0,0,0,.35); font: 600 13px ui-sans-serif, system-ui; }
+.barra-prototipo button { background: #2a2a2a; color: #fff; border: 0; width: 34px; height: 34px; border-radius: 50%; cursor: pointer; font-size: 16px; }
+.barra-prototipo button:hover { background: #444; }
+.barra-prototipo .rotulo { padding: 0 14px; min-width: 250px; text-align: center; }
+.barra-prototipo .rotulo small { opacity: .6; font-weight: 500; }
+</style>
+</head>
+<body>
+<header class="topo">
+  <h1 id="titulo-mapa"></h1>
+  <p class="sub" id="subtitulo-mapa"></p>
+  <div class="legenda" id="legenda"></div>
+</header>
+<main>
+  <section class="alertas" id="alertas" aria-label="Antes de construir"></section>
+  <div id="palco"></div>
+</main>
+<aside class="gaveta" id="gaveta" aria-hidden="true"><button class="fechar" id="fechar-gaveta" aria-label="Fechar">×</button><div id="conteudo-gaveta"></div></aside>
+<nav class="barra-prototipo" aria-label="Variantes do protótipo">
+  <button id="variante-anterior" aria-label="Variante anterior">←</button>
+  <span class="rotulo" id="rotulo-variante"></span>
+  <button id="variante-seguinte" aria-label="Próxima variante">→</button>
+</nav>
+<script>
+const dadosDoMapa = /*__DADOS__*/null;
+const urlRepositorio = dadosDoMapa.url_issues;
+const noPorId = new Map(dadosDoMapa.nos.map(no => [no.id, no]));
+const corPorJornada = Object.fromEntries(dadosDoMapa.jornadas.map(jornada => [jornada.id, `var(--j${jornada.cor})`]));
+const grupoDeFatias = dadosDoMapa.grupo ?? null;
+const idsDasFatiasDoGrupo = grupoDeFatias?.fatias ?? [];
+const ultimaFatiaDoGrupo = idsDasFatiasDoGrupo.at(-1);
+const idsProntasSoNoRotulo = new Set(dadosDoMapa.prontas_so_no_rotulo ?? []);
+const resolverId = idNo => (grupoDeFatias && idNo === grupoDeFatias.chave) ? ultimaFatiaDoGrupo : idNo;
+document.title = dadosDoMapa.titulo;
+document.getElementById('titulo-mapa').textContent = dadosDoMapa.titulo;
+document.getElementById('subtitulo-mapa').innerHTML = dadosDoMapa.subtitulo_html;
+
+const escapar = texto => String(texto ?? '').replace(/[&<>"]/g, caractere => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[caractere]));
+const nomeDoNo = idNo => (grupoDeFatias && idNo === grupoDeFatias.chave) ? grupoDeFatias.nome_curto : (noPorId.get(idNo)?.titulo_curto ?? `#${idNo}`);
+
+function quemTrava(idNo) {
+  return dadosDoMapa.arestas.filter(aresta => resolverId(aresta.de) === idNo).map(aresta => aresta.para);
+}
+function quemBloqueia(idNo) {
+  return dadosDoMapa.arestas.filter(aresta => aresta.para === idNo).map(aresta => resolverId(aresta.de));
+}
+
+function seloDoNo(no) {
+  if (no.pronto_para_agente && idsProntasSoNoRotulo.has(no.id)) return '<span class="selo falso-pronto" title="Marcada ready-for-agent, mas espera algo que o GitHub não registra como bloqueio">pronta só no rótulo</span>';
+  if (no.pronto_para_agente) return '<span class="selo pronto">pronta para agente</span>';
+  const rotuloPorTipo = { 'prd-a-escrever': 'PRD a escrever', 'needs-triage': 'triar', decisao: 'decisão', tarefa: 'tarefa', fatia: 'fatia', prd: 'PRD' };
+  return `<span class="selo ${no.tipo}">${rotuloPorTipo[no.tipo] ?? no.tipo}</span>`;
+}
+function corDoTextoSobre(corHex) {
+  const [vermelho, verde, azul] = [0, 2, 4].map(posicao => parseInt(corHex.slice(posicao, posicao + 2), 16) / 255);
+  const luminancia = 0.2126 * vermelho + 0.7152 * verde + 0.0722 * azul;
+  return luminancia > 0.55 ? '#1f2328' : '#ffffff';
+}
+function etiquetaGithub(nomeRotulo) {
+  const rotulo = dadosDoMapa.cores_label[nomeRotulo];
+  const corFundo = rotulo?.cor ?? 'cccccc';
+  return `<span class="etiqueta-gh" style="background:#${corFundo};color:${corDoTextoSobre(corFundo)}" title="${escapar(rotulo?.descricao || nomeRotulo)}">${escapar(nomeRotulo)}</span>`;
+}
+const etiquetasGithub = no => no.labels?.length
+  ? `<div class="linha-etiquetas-gh">${no.labels.map(etiquetaGithub).join('')}</div>`
+  : '<div class="linha-etiquetas-gh"><span class="etiqueta-gh" style="background:transparent;color:var(--texto-2);border-style:dashed">sem rótulo</span></div>';
+const chipDeIssue = idNo => `<span class="chip" data-abrir="${resolverId(idNo)}">${escapar(nomeDoNo(idNo))}</span>`;
+
+function listaDeRotas(contrato) {
+  const linhasDeRota = [
+    ...contrato.rotas_novas.map(rota => ({ ...rota, especie: 'nova' })),
+    ...contrato.rotas_alteradas.map(rota => ({ ...rota, especie: 'alterada' })),
+  ];
+  if (!linhasDeRota.length) return '<p style="color:var(--texto-2)">Nenhuma rota HTTP.</p>';
+  return '<ul>' + linhasDeRota.map(rota => `<li><b style="color:var(--${rota.especie})">${rota.especie === 'nova' ? '+' : '~'}</b> <span class="rota">${escapar(rota.metodo)} ${escapar(rota.caminho ?? '')}</span>${rota.o_que_faz ? ` — ${escapar(rota.o_que_faz)}` : ''}</li>`).join('') + '</ul>';
+}
+
+function detalheDoNo(no) {
+  const idsQueTrava = [...new Set(quemTrava(no.id))];
+  const arestasDeEntrada = dadosDoMapa.arestas.filter(aresta => aresta.para === no.id);
+  const contrato = no.contrato;
+  const secaoRiscos = no.riscos?.length ? `<h3>Atenção</h3><ul>${no.riscos.map(risco => `<li>${escapar(risco)}</li>`).join('')}</ul>` : '';
+  const secaoTelas = no.telas_que_esperam?.length ? `<h3>Telas que esperam por ela</h3><ul>${no.telas_que_esperam.map(tela => `<li><code>${escapar(typeof tela === 'string' ? tela : (tela.arquivo ?? JSON.stringify(tela)))}</code></li>`).join('')}</ul>` : '';
+  return `
+    <div class="num">${seloDoNo(no)} &nbsp;<a href="${urlRepositorio}${no.id}" target="_blank" rel="noopener">#${no.id} no GitHub ↗</a></div>
+    <h2>${escapar(no.titulo)}</h2>
+    ${etiquetasGithub(no)}
+    <p>${escapar(no.o_que_e)}</p>
+    ${no.como_funciona?.length ? `<h3>Como funciona</h3><ul>${no.como_funciona.map(item => `<li>${escapar(item)}</li>`).join('')}</ul>` : ''}
+    <h3>Espera por</h3>
+    ${arestasDeEntrada.length ? '<ul>' + arestasDeEntrada.map(aresta => `<li>${chipDeIssue(aresta.de)} ${aresta.tipo === 'inferida' ? `<em style="color:var(--texto-2)">(só no texto) ${escapar(aresta.motivo)}</em>` : '<em style="color:var(--texto-2)">(bloqueio registrado)</em>'}</li>`).join('') + '</ul>' : '<p>Nada. Pode começar.</p>'}
+    <h3>Trava</h3>
+    ${idsQueTrava.length ? idsQueTrava.map(chipDeIssue).join('') : '<p>Ninguém.</p>'}
+    <h3>Contrato</h3>
+    ${listaDeRotas(contrato)}
+    ${contrato.tabelas?.length ? `<p><b>Tabelas:</b> ${contrato.tabelas.map(tabela => `<code>${escapar(tabela)}</code>`).join(', ')}</p>` : ''}
+    ${contrato.campos?.length ? `<p><b>Campos:</b> ${contrato.campos.map(campo => `<code>${escapar(campo)}</code>`).join(', ')}</p>` : ''}
+    ${contrato.eventos_externos?.length ? `<p><b>Fora do backend:</b> ${contrato.eventos_externos.map(escapar).join(' · ')}</p>` : ''}
+    ${secaoTelas}${secaoRiscos}`;
+}
+
+const gaveta = document.getElementById('gaveta');
+function abrirGaveta(idNo) {
+  const no = noPorId.get(Number(idNo));
+  if (!no) return;
+  document.getElementById('conteudo-gaveta').innerHTML = detalheDoNo(no);
+  gaveta.classList.add('aberta'); gaveta.setAttribute('aria-hidden', 'false');
+}
+document.getElementById('fechar-gaveta').onclick = () => { gaveta.classList.remove('aberta'); gaveta.setAttribute('aria-hidden', 'true'); };
+document.addEventListener('click', evento => {
+  const alvoClicado = evento.target.closest('[data-abrir]');
+  if (alvoClicado) abrirGaveta(alvoClicado.dataset.abrir);
+});
+
+function desenharCabecalhoComum() {
+  document.getElementById('legenda').innerHTML = dadosDoMapa.jornadas.map(jornada => `<span><i class="ponto" style="background:${corPorJornada[jornada.id]}"></i>${jornada.nome}</span>`).join('')
+    + '<span>— bloqueio registrado</span><span>- - - só no texto</span>';
+  const rotulosEmUso = [...new Set(dadosDoMapa.nos.flatMap(no => no.labels ?? []))].sort();
+  document.getElementById('legenda').insertAdjacentHTML('afterend', `<div class="legenda-gh"><span>Rótulos do GitHub no mapa:</span>${rotulosEmUso.map(etiquetaGithub).join('')}</div>`);
+  document.getElementById('alertas').innerHTML = dadosDoMapa.alertas.map(alerta => `
+    <div class="alerta ${alerta.gravidade}"><span class="etiqueta">${escapar(alerta.etiqueta ?? (alerta.gravidade === 'trava' ? 'trava o caminho' : 'corrigir no texto'))}</span>
+    <strong>${escapar(alerta.titulo)}</strong>${escapar(alerta.texto)}<div style="margin-top:6px">${alerta.resolve.map(chipDeIssue).join('')}</div></div>`).join('');
+}
+
+/* ================= Variante A — grafo por onda × jornada ================= */
+function varianteGrafo(palco) {
+  const colunasDeOnda = dadosDoMapa.ondas;
+  let html = '<div class="grafo" id="grafo"><div class="canto"></div>';
+  html += colunasDeOnda.map(onda => `<div class="cab-onda"><b>${onda.id}. ${escapar(onda.nome)}</b><small>${escapar(onda.resumo)}</small></div>`).join('');
+  for (const jornada of dadosDoMapa.jornadas) {
+    html += `<div class="cab-jornada"><i class="ponto" style="background:${corPorJornada[jornada.id]};margin-top:5px"></i>${jornada.nome}</div>`;
+    for (const onda of colunasDeOnda) {
+      const nosDaCelula = dadosDoMapa.nos.filter(no => no.jornada === jornada.id && no.onda === onda.id);
+      html += `<div class="celula">${nosDaCelula.map(no => `
+        <div class="no" data-no="${no.id}" style="--cor-jornada:${corPorJornada[no.jornada]}">
+          <div class="num">#${no.id}</div><div>${escapar(no.titulo_curto)}</div>
+          ${etiquetasGithub(no)}
+          <div class="linha-selos">${seloDoNo(no)}</div></div>`).join('')}</div>`;
+    }
+  }
+  html += '<svg class="arestas" id="svg-arestas"></svg></div>';
+  palco.innerHTML = html;
+
+  const grafo = document.getElementById('grafo');
+  const svgArestas = document.getElementById('svg-arestas');
+  const elementoDoNo = idNo => grafo.querySelector(`[data-no="${resolverId(idNo)}"]`);
+  function desenharArestas() {
+    const caixaDoGrafo = grafo.getBoundingClientRect();
+    svgArestas.setAttribute('width', grafo.scrollWidth); svgArestas.setAttribute('height', grafo.scrollHeight);
+    svgArestas.innerHTML = '<defs><marker id="seta" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="currentColor" style="color:var(--texto-2)"/></marker></defs>'
+      + dadosDoMapa.arestas.map((aresta, indiceAresta) => {
+        const elementoOrigem = elementoDoNo(aresta.de), elementoDestino = elementoDoNo(aresta.para);
+        if (!elementoOrigem || !elementoDestino) return '';
+        const caixaOrigem = elementoOrigem.getBoundingClientRect(), caixaDestino = elementoDestino.getBoundingClientRect();
+        const deslocamentoX = grafo.scrollLeft - caixaDoGrafo.left, deslocamentoY = grafo.scrollTop - caixaDoGrafo.top;
+        const mesmaColuna = Math.abs(caixaOrigem.left - caixaDestino.left) < 20;
+        let inicioX, inicioY, fimX, fimY, curva;
+        if (mesmaColuna) {
+          inicioX = caixaOrigem.left + 12 + deslocamentoX; inicioY = caixaOrigem.bottom + deslocamentoY;
+          fimX = caixaDestino.left + 12 + deslocamentoX; fimY = caixaDestino.top + deslocamentoY;
+          curva = `M${inicioX},${inicioY} C${inicioX - 30},${(inicioY + fimY) / 2} ${fimX - 30},${(inicioY + fimY) / 2} ${fimX},${fimY}`;
+        } else {
+          inicioX = caixaOrigem.right + deslocamentoX; inicioY = caixaOrigem.top + caixaOrigem.height / 2 + deslocamentoY;
+          fimX = caixaDestino.left + deslocamentoX; fimY = caixaDestino.top + caixaDestino.height / 2 + deslocamentoY;
+          const meioX = (inicioX + fimX) / 2;
+          curva = `M${inicioX},${inicioY} C${meioX},${inicioY} ${meioX},${fimY} ${fimX},${fimY}`;
+        }
+        return `<path data-aresta="${indiceAresta}" class="${aresta.tipo}" d="${curva}" marker-end="url(#seta)"/>`;
+      }).join('');
+  }
+  requestAnimationFrame(desenharArestas);
+  window.onresize = desenharArestas; grafo.onscroll = desenharArestas;
+
+  function acenderVizinhanca(idNo) {
+    const idsAcima = new Set(), idsAbaixo = new Set();
+    const percorrer = (idAtual, vizinhosDe, acumulador) => vizinhosDe(idAtual).forEach(idVizinho => { if (!acumulador.has(idVizinho)) { acumulador.add(idVizinho); percorrer(idVizinho, vizinhosDe, acumulador); } });
+    percorrer(idNo, quemBloqueia, idsAcima); percorrer(idNo, quemTrava, idsAbaixo);
+    grafo.querySelectorAll('.no').forEach(elementoNo => {
+      const idElemento = Number(elementoNo.dataset.no);
+      elementoNo.classList.toggle('foco', idElemento === idNo);
+      elementoNo.classList.toggle('aceso-sobe', idsAcima.has(idElemento));
+      elementoNo.classList.toggle('aceso-desce', idsAbaixo.has(idElemento));
+      elementoNo.classList.toggle('apagado', idElemento !== idNo && !idsAcima.has(idElemento) && !idsAbaixo.has(idElemento));
+    });
+    const idsEnvolvidos = new Set([idNo, ...idsAcima, ...idsAbaixo]);
+    svgArestas.querySelectorAll('path[data-aresta]').forEach(caminho => {
+      const aresta = dadosDoMapa.arestas[caminho.dataset.aresta];
+      const idOrigem = resolverId(aresta.de);
+      caminho.classList.toggle('acesa', idsEnvolvidos.has(idOrigem) && idsEnvolvidos.has(aresta.para));
+    });
+  }
+  function apagarVizinhanca() {
+    grafo.querySelectorAll('.no').forEach(elementoNo => elementoNo.classList.remove('foco', 'aceso-sobe', 'aceso-desce', 'apagado'));
+    svgArestas.querySelectorAll('path').forEach(caminho => caminho.classList.remove('acesa'));
+  }
+  grafo.querySelectorAll('.no').forEach(elementoNo => {
+    elementoNo.onmouseenter = () => acenderVizinhanca(Number(elementoNo.dataset.no));
+    elementoNo.onmouseleave = apagarVizinhanca;
+    elementoNo.onclick = () => abrirGaveta(elementoNo.dataset.no);
+  });
+  palco.insertAdjacentHTML('beforeend', `<p style="color:var(--texto-2);font-size:13px">Passe o mouse para ver a cadeia: contorno vermelho = o que ela espera; tracejado verde = o que ela solta. ${grupoDeFatias ? `A seta que sai de ${escapar(grupoDeFatias.nome_curto)} parte da última fatia.` : ''}</p>`);
+}
+
+/* ================= Variante B — roteiro em ondas, tudo aberto ================= */
+function cartaoDeIssue(no) {
+  const arestasDeEntrada = dadosDoMapa.arestas.filter(aresta => aresta.para === no.id);
+  const idsQueTrava = [...new Set(quemTrava(no.id))];
+  const rotasDoNo = [...no.contrato.rotas_novas.map(rota => '+ ' + rota.metodo + ' ' + (rota.caminho ?? '')), ...no.contrato.rotas_alteradas.map(rota => '~ ' + rota.metodo + ' ' + (rota.caminho ?? ''))];
+  return `<article class="cartao-issue" style="--cor-jornada:${corPorJornada[no.jornada]}">
+    <div class="cabecalho"><h3>${escapar(no.titulo_curto)} <span class="quem">#${no.id} · ${escapar(dadosDoMapa.jornadas.find(jornada => jornada.id === no.jornada)?.nome)}</span></h3><div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">${(no.labels ?? []).map(etiquetaGithub).join('')}${seloDoNo(no)}</div></div>
+    <div class="colunas">
+      <div><p>${escapar(no.o_que_e)}</p>${no.como_funciona?.length ? `<h4>Como funciona</h4><ul>${no.como_funciona.slice(0, 5).map(item => `<li>${escapar(item)}</li>`).join('')}</ul>` : ''}</div>
+      <div>
+        <h4>Espera por</h4><div>${arestasDeEntrada.length ? arestasDeEntrada.map(aresta => chipDeIssue(aresta.de)).join('') : '<span style="color:var(--pronto);font-size:13px;font-weight:600">nada</span>'}</div>
+        <h4 style="margin-top:8px">Trava</h4><div>${idsQueTrava.length ? idsQueTrava.map(chipDeIssue).join('') : '<span style="color:var(--texto-2);font-size:13px">ninguém</span>'}</div>
+        <h4 style="margin-top:8px">Contrato</h4><div style="font-size:12.5px">${rotasDoNo.length ? rotasDoNo.map(textoRota => `<div class="rota">${escapar(textoRota)}</div>`).join('') : (no.contrato.tabelas?.length ? 'tabelas: ' + no.contrato.tabelas.map(escapar).join(', ') : '<span style="color:var(--texto-2)">sem rota</span>')}</div>
+        <div style="margin-top:8px"><span class="chip" data-abrir="${no.id}">detalhe completo →</span></div>
+      </div>
+    </div></article>`;
+}
+function varianteRoteiro(palco) {
+  palco.innerHTML = '<div class="roteiro">' + dadosDoMapa.ondas.map((onda, indiceOnda) => {
+    const nosDaOnda = dadosDoMapa.nos.filter(no => no.onda === onda.id);
+    const ehOndaDoGrupo = grupoDeFatias && onda.id === grupoDeFatias.onda;
+    const cartoes = ehOndaDoGrupo
+      ? `<div class="grupo-fatias" style="--cor-grupo:${corPorJornada[grupoDeFatias.jornada]}"><div class="titulo-grupo">${escapar(grupoDeFatias.titulo)} — as fatias na ordem</div>${idsDasFatiasDoGrupo.map(idFatia => cartaoDeIssue(noPorId.get(idFatia))).join('')}</div>${nosDaOnda.filter(no => !idsDasFatiasDoGrupo.includes(no.id)).map(cartaoDeIssue).join('')}`
+      : nosDaOnda.map(cartaoDeIssue).join('');
+    return `<section class="passo-onda"><div class="trilho"><div class="bola">${onda.id}</div>${indiceOnda < dadosDoMapa.ondas.length - 1 ? '<div class="fio"></div>' : ''}</div>
+      <div class="corpo-onda"><h2>${escapar(onda.nome)}</h2><p>${escapar(onda.resumo)}</p>${cartoes}
+      <div class="checkpoint"><b>✋ Checkpoint humano</b><span>${escapar(onda.checkpoint)}</span></div></div></section>`;
+  }).join('') + '</div>';
+}
+
+/* ================= Variante C — o contrato: hoje × o que a camada 2 acrescenta ================= */
+function recursoDaRota(caminho) {
+  const primeiroSegmento = (caminho || '').split('/').filter(Boolean)[0];
+  return primeiroSegmento && !primeiroSegmento.includes('(') ? primeiroSegmento.replace(/[{}:]/g, '') : null;
+}
+function recursoPorPalavra(textoRota, no) {
+  const pistas = dadosDoMapa.pistas_de_recurso ?? [];
+  const textoMinusculo = textoRota.toLowerCase();
+  const pistaEncontrada = pistas.find(([palavra]) => textoMinusculo.includes(palavra));
+  return pistaEncontrada ? pistaEncontrada[1] : 'outros';
+}
+function varianteContrato(palco) {
+  const rotasPorRecurso = new Map();
+  const garantirRecurso = nomeRecurso => { if (!rotasPorRecurso.has(nomeRecurso)) rotasPorRecurso.set(nomeRecurso, []); return rotasPorRecurso.get(nomeRecurso); };
+  for (const rotaExistente of dadosDoMapa.contrato_atual.rotas) garantirRecurso(recursoDaRota(rotaExistente.caminho) ?? 'outros').push({ ...rotaExistente, especie: 'existente' });
+  for (const no of dadosDoMapa.nos) {
+    for (const [listaDeRotas, especie] of [[no.contrato.rotas_novas, 'nova'], [no.contrato.rotas_alteradas, 'alterada']]) {
+      for (const rotaProposta of listaDeRotas) {
+        const caminhoDefinido = rotaProposta.caminho && rotaProposta.caminho.startsWith('/');
+        const nomeRecurso = caminhoDefinido ? recursoDaRota(rotaProposta.caminho) : recursoPorPalavra(`${rotaProposta.metodo} ${rotaProposta.caminho ?? ''} ${rotaProposta.o_que_faz ?? ''}`, no);
+        garantirRecurso(nomeRecurso ?? 'outros').push({ ...rotaProposta, especie, idIssue: no.id, caminhoDefinido });
+      }
+    }
+  }
+  const totalExistentes = dadosDoMapa.contrato_atual.rotas.length;
+  const rotasPropostas = [...rotasPorRecurso.values()].flat().filter(rota => rota.especie !== 'existente');
+  const totalSemCaminho = rotasPropostas.filter(rota => !rota.caminhoDefinido).length;
+  const recursosOrdenados = [...rotasPorRecurso.entries()].sort(([, rotasA], [, rotasB]) => rotasB.filter(rota => rota.especie !== 'existente').length - rotasA.filter(rota => rota.especie !== 'existente').length);
+
+  const tabelasNovas = dadosDoMapa.nos.flatMap(no => (no.contrato.tabelas ?? []).map(tabela => ({ tabela, idIssue: no.id })));
+  const eventosExternos = dadosDoMapa.nos.flatMap(no => (no.contrato.eventos_externos ?? []).map(evento => ({ evento, idIssue: no.id })));
+
+  palco.innerHTML = `
+    <div class="filtro-contrato" role="group" aria-label="Filtro">
+      <button data-filtro="tudo" aria-pressed="false">Tudo (${totalExistentes} hoje + ${rotasPropostas.length} propostas)</button>
+      <button data-filtro="mudanca" aria-pressed="true">Só o que muda</button>
+    </div>
+    <div class="contrato">
+      <div id="lista-recursos">${recursosOrdenados.map(([nomeRecurso, rotasDoRecurso]) => {
+        const quantidadeMudancas = rotasDoRecurso.filter(rota => rota.especie !== 'existente').length;
+        return `<section class="recurso" data-tem-mudanca="${quantidadeMudancas > 0}"><div class="nome"><span>/${escapar(nomeRecurso)}</span><small>${rotasDoRecurso.filter(rota => rota.especie === 'existente').length} hoje${quantidadeMudancas ? ` · <b style="color:var(--nova)">+${quantidadeMudancas}</b>` : ''}</small></div>
+        ${rotasDoRecurso.map(rota => `<div class="linha-rota ${rota.especie}" ${rota.especie === 'existente' ? 'data-existente' : ''}>
+          <span class="metodo">${escapar(rota.metodo)}</span>
+          <span>${rota.especie === 'existente' || rota.caminhoDefinido ? `<span class="rota">${escapar(rota.caminho)}</span>` : `<span class="indef">${escapar(rota.caminho ?? 'caminho a definir')}</span>`}${rota.o_que_faz ? `<span class="explica">${escapar(rota.o_que_faz)}</span>` : ''}</span>
+          <span style="text-align:right">${rota.idIssue ? chipDeIssue(rota.idIssue) + '<br>' + (noPorId.get(rota.idIssue).labels ?? []).map(etiquetaGithub).join(' ') : `<span style="font-size:11.5px">${escapar(rota.operationId ?? '')}</span>`}</span>
+        </div>`).join('')}</section>`;
+      }).join('')}</div>
+      <aside class="lateral">
+        <div class="bloco"><h3>Em números</h3>
+          <div><b>${totalExistentes}</b> rotas em <code>${escapar(dadosDoMapa.contrato_atual.origem ?? 'contrato')}</code> hoje</div>
+          <div><b style="color:var(--nova)">${rotasPropostas.filter(rota => rota.especie === 'nova').length}</b> rotas novas propostas, <b style="color:var(--alterada)">${rotasPropostas.filter(rota => rota.especie === 'alterada').length}</b> alteradas</div>
+          <div><b style="color:var(--trava)">${totalSemCaminho}</b> delas ainda sem caminho definido: é trabalho do PRD de cada uma, não do agente</div>
+          ${dadosDoMapa.contrato_atual.como_nasce_html ? `<p style="color:var(--texto-2);margin:8px 0 0">${dadosDoMapa.contrato_atual.como_nasce_html}</p>` : ''}</div>
+        <div class="bloco"><h3>Tabelas que nascem ou mudam</h3><ul>${[...new Map(tabelasNovas.map(item => [item.tabela, item])).values()].map(item => `<li><code>${escapar(item.tabela)}</code> ${chipDeIssue(item.idIssue)}</li>`).join('')}</ul></div>
+        <div class="bloco"><h3>${escapar(dadosDoMapa.titulo_externos ?? 'Fora do sistema')}</h3><ul>${eventosExternos.map(item => `<li>${escapar(item.evento)} ${chipDeIssue(item.idIssue)}</li>`).join('')}</ul></div>
+        ${(dadosDoMapa.notas_contrato ?? []).map(nota => `<div class="bloco"><h3>${escapar(nota.titulo)}</h3><ul>${nota.itens.map(item => `<li>${escapar(item)}</li>`).join('')}</ul></div>`).join('')}
+        <div class="bloco"><h3>ADRs que governam</h3><ul>${dadosDoMapa.adrs.map(adr => `<li><b>${escapar(adr.id)}</b> ${escapar(adr.titulo)}${adr.status && adr.status !== 'accepted' ? ` <em style="color:var(--texto-2)">(${escapar(adr.status)})</em>` : ''}</li>`).join('')}</ul></div>
+      </aside>
+    </div>`;
+  const aplicarFiltro = filtroEscolhido => {
+    palco.querySelectorAll('[data-filtro]').forEach(botao => botao.setAttribute('aria-pressed', String(botao.dataset.filtro === filtroEscolhido)));
+    palco.querySelectorAll('[data-existente]').forEach(linha => { linha.style.display = filtroEscolhido === 'tudo' ? '' : 'none'; });
+    palco.querySelectorAll('.recurso').forEach(secao => { secao.style.display = filtroEscolhido === 'tudo' || secao.dataset.temMudanca === 'true' ? '' : 'none'; });
+  };
+  palco.querySelectorAll('[data-filtro]').forEach(botao => botao.onclick = () => aplicarFiltro(botao.dataset.filtro));
+  aplicarFiltro('mudanca');
+}
+
+/* ================= Troca de variante ================= */
+const variantes = [
+  { chave: 'A', nome: 'Grafo: onda × jornada', desenhar: varianteGrafo },
+  { chave: 'B', nome: 'Roteiro: passo a passo', desenhar: varianteRoteiro },
+  { chave: 'C', nome: 'Contrato: hoje × proposto', desenhar: varianteContrato },
+];
+function mostrarVariante(chaveVariante) {
+  const varianteEscolhida = variantes.find(variante => variante.chave === chaveVariante) ?? variantes[0];
+  const parametrosUrl = new URLSearchParams(location.search); parametrosUrl.set('variant', varianteEscolhida.chave);
+  history.replaceState(null, '', '?' + parametrosUrl.toString());
+  document.getElementById('rotulo-variante').innerHTML = `${varianteEscolhida.chave} — ${varianteEscolhida.nome} <small>(← →)</small>`;
+  window.onresize = null;
+  varianteEscolhida.desenhar(document.getElementById('palco'));
+}
+const indiceDaVarianteAtual = () => Math.max(0, variantes.findIndex(variante => variante.chave === (new URLSearchParams(location.search).get('variant') ?? 'A')));
+const andarVariante = passo => mostrarVariante(variantes[(indiceDaVarianteAtual() + passo + variantes.length) % variantes.length].chave);
+document.getElementById('variante-anterior').onclick = () => andarVariante(-1);
+document.getElementById('variante-seguinte').onclick = () => andarVariante(1);
+document.addEventListener('keydown', evento => {
+  if (evento.target.closest('input, textarea, [contenteditable]')) return;
+  if (evento.key === 'ArrowLeft') andarVariante(-1);
+  if (evento.key === 'ArrowRight') andarVariante(1);
+  if (evento.key === 'Escape') document.getElementById('fechar-gaveta').click();
+});
+desenharCabecalhoComum();
+mostrarVariante(new URLSearchParams(location.search).get('variant') ?? 'A');
+</script>
+</body>
+</html>

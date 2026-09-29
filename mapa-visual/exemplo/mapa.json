@@ -1,0 +1,1216 @@
+{
+ "titulo": "Camada 2: o que fazer agora",
+ "subtitulo_html": "EXEMPLO ANONIMIZADO — plataforma fictícia de reserva de quadras. Backend real por trás das telas, com provedor de pagamento e SMS falsos. Clique em qualquer issue para ver o que ela é, como funciona, o que trava e o que muda no contrato.",
+ "repositorio": "exemplo/quadras",
+ "url_issues": "https://github.com/exemplo/quadras/issues/",
+ "levantado_em": "2026-09-29",
+ "ondas": [
+  {
+   "id": 0,
+   "nome": "Destravar o dinheiro",
+   "resumo": "Decisões e respostas que o Pagamento precisa antes de virar código. Humano no circuito.",
+   "checkpoint": "Você decide: o ADR do cartão e a divisão PCI. O provedor responde por fora."
+  },
+  {
+   "id": 1,
+   "nome": "Pronto agora",
+   "resumo": "Nada aqui espera o Pagamento. Pode correr enquanto a onda 0 anda.",
+   "checkpoint": "Triar o Voucher e os Avisos (needs-triage → ready-for-agent)."
+  },
+  {
+   "id": 2,
+   "nome": "O Pagamento",
+   "resumo": "O tronco: quatro fatias em sequência, contra um provedor falso.",
+   "checkpoint": "Conferir o fluxo inteiro com o provedor falso antes de soltar o que depende dele."
+  },
+  {
+   "id": 3,
+   "nome": "Depois do Pagamento",
+   "resumo": "Dinheiro que volta, dinheiro que se mostra, e os PRDs que só se escrevem com o Pagamento de pé.",
+   "checkpoint": "Escrever os PRDs a escrever (/to-prd → /to-issues)."
+  },
+  {
+   "id": 4,
+   "nome": "Camada 3",
+   "resumo": "Provedor real, SMS real e tudo no ar. Fora da camada 2, mostrado só para ver o fim.",
+   "checkpoint": "Chave do provedor do primeiro Clube."
+  }
+ ],
+ "jornadas": [
+  {
+   "id": "pagamento",
+   "nome": "Mapa do pagamento (PCI)",
+   "cor": 1
+  },
+  {
+   "id": "tronco",
+   "nome": "Tronco",
+   "cor": 2
+  },
+  {
+   "id": "clube",
+   "nome": "Clube (painel)",
+   "cor": 3
+  },
+  {
+   "id": "jogador",
+   "nome": "Jogador (site e app)",
+   "cor": 4
+  },
+  {
+   "id": "portaria",
+   "nome": "Portaria",
+   "cor": 5
+  },
+  {
+   "id": "camada3",
+   "nome": "Camada 3",
+   "cor": 6
+  }
+ ],
+ "grupo": {
+  "chave": "pagamento",
+  "nome_curto": "Pagamento (PRD)",
+  "titulo": "PRD — Pagamento (núcleo)",
+  "id_prd": 210,
+  "fatias": [
+   211,
+   212,
+   213,
+   214
+  ],
+  "onda": 2,
+  "jornada": "tronco"
+ },
+ "prontas_so_no_rotulo": [
+  211,
+  213,
+  214
+ ],
+ "nos": [
+  {
+   "id": 201,
+   "titulo_curto": "Perguntas ao provedor",
+   "titulo": "Tarefa: as perguntas ao gerente de contas do provedor de pagamento",
+   "estado": "open",
+   "tipo": "tarefa",
+   "labels": [
+    "wayfinder:task"
+   ],
+   "jornada": "pagamento",
+   "onda": 0,
+   "o_que_e": "Respostas sobre 3DS, antifraude e o que acontece se a cobrança for excluída com a fatura aberta; alimentam a emenda do PRD, não travam o caminho.",
+   "como_funciona": [],
+   "bloqueado_por": [],
+   "trava": [
+    204
+   ],
+   "contrato": {
+    "rotas_novas": [],
+    "rotas_alteradas": [],
+    "campos": [],
+    "tabelas": [],
+    "eventos_externos": []
+   },
+   "telas_que_esperam": [],
+   "pronto_para_agente": false,
+   "riscos": []
+  },
+  {
+   "id": 202,
+   "titulo_curto": "Responsabilidade PCI no contrato",
+   "titulo": "Quem responde por qual requisito da PCI DSS entre o Clube e a plataforma?",
+   "estado": "open",
+   "tipo": "decisao",
+   "labels": [
+    "wayfinder:grilling"
+   ],
+   "jornada": "pagamento",
+   "onda": 0,
+   "o_que_e": "Divide os requisitos entre provedor, Clube e plataforma e decide o texto do contrato; não toca o código do Pagamento diretamente.",
+   "como_funciona": [],
+   "bloqueado_por": [],
+   "trava": [
+    204
+   ],
+   "contrato": {
+    "rotas_novas": [],
+    "rotas_alteradas": [],
+    "campos": [],
+    "tabelas": [],
+    "eventos_externos": []
+   },
+   "telas_que_esperam": [],
+   "pronto_para_agente": false,
+   "riscos": []
+  },
+  {
+   "id": 203,
+   "titulo_curto": "ADR do caminho do cartão",
+   "titulo": "Tarefa: ADR do caminho do cartão e a emenda de 'a Reserva só existe paga'",
+   "estado": "open",
+   "tipo": "tarefa",
+   "labels": [
+    "wayfinder:task"
+   ],
+   "jornada": "pagamento",
+   "onda": 0,
+   "o_que_e": "Registra a decisão já tomada: o cartão é pago na fatura hospedada do provedor, e a cobrança em aberto segura o Horário por 10 minutos. O ADR ainda não existe.",
+   "como_funciona": [],
+   "bloqueado_por": [],
+   "trava": [
+    204
+   ],
+   "contrato": {
+    "rotas_novas": [],
+    "rotas_alteradas": [],
+    "campos": [],
+    "tabelas": [],
+    "eventos_externos": []
+   },
+   "telas_que_esperam": [],
+   "pronto_para_agente": false,
+   "riscos": []
+  },
+  {
+   "id": 204,
+   "titulo_curto": "Emendar PRD do Pagamento",
+   "titulo": "Tarefa: emendar o PRD do Pagamento com a fatura hospedada",
+   "estado": "open",
+   "tipo": "tarefa",
+   "labels": [
+    "wayfinder:task"
+   ],
+   "jornada": "pagamento",
+   "onda": 0,
+   "o_que_e": "Leva ao PRD do Pagamento o fluxo da fatura, a exclusão aos 10 minutos e o pagamento que chega atrasado; o texto diz 'antes da fatia do provedor', mas sem bloqueio registrado.",
+   "como_funciona": [],
+   "bloqueado_por": [
+    201,
+    202,
+    203
+   ],
+   "trava": [],
+   "contrato": {
+    "rotas_novas": [],
+    "rotas_alteradas": [],
+    "campos": [],
+    "tabelas": [],
+    "eventos_externos": []
+   },
+   "telas_que_esperam": [],
+   "pronto_para_agente": false,
+   "riscos": []
+  },
+  {
+   "id": 221,
+   "titulo_curto": "Grade de horários por HTTP",
+   "titulo": "G6 · Grade de horários por HTTP: a agenda do Clube deixa de vir vazia",
+   "estado": "open",
+   "tipo": "fatia",
+   "labels": [
+    "ready-for-agent"
+   ],
+   "jornada": "clube",
+   "onda": 1,
+   "o_que_e": "Liga a agenda do painel à rota real: cada Quadra com seus Horários do dia, quem reservou e se já fez check-in.",
+   "como_funciona": [
+    "Uma leitura por Quadra e dia, escopada pelo Vínculo de quem pede.",
+    "Horário ocupado mostra o Jogador e o número do documento mascarado.",
+    "A tela troca o adaptador mock pelo HTTP sem mudar de forma."
+   ],
+   "bloqueado_por": [],
+   "trava": [
+    241
+   ],
+   "contrato": {
+    "rotas_novas": [
+     {
+      "metodo": "GET",
+      "caminho": "(agenda da Quadra — caminho não definido)",
+      "o_que_faz": "Horários do dia com o Jogador de cada um (proposto)"
+     }
+    ],
+    "rotas_alteradas": [],
+    "campos": [],
+    "tabelas": [],
+    "eventos_externos": []
+   },
+   "telas_que_esperam": [
+    "club-web/src/services/schedule.ts",
+    "club-web/src/app/agenda/page.tsx"
+   ],
+   "pronto_para_agente": true,
+   "riscos": [
+    "O texto pede 'pago/pendente' na agenda, mas se a Reserva só existe paga não há pendente para mostrar."
+   ]
+  },
+  {
+   "id": 222,
+   "titulo_curto": "Editar Reserva avulsa",
+   "titulo": "G7 · Editar Horário e Horário avulso: a escrita que falta chega ao servidor",
+   "estado": "open",
+   "tipo": "fatia",
+   "labels": [
+    "ready-for-agent"
+   ],
+   "jornada": "clube",
+   "onda": 1,
+   "o_que_e": "Permite ao Clube mudar um Horário já criado e criar um Horário fora da grade semanal.",
+   "como_funciona": [
+    "Editar só muda o que ainda não tem Reserva.",
+    "O avulso nasce sem modelo semanal, pela mesma rota de instanciação."
+   ],
+   "bloqueado_por": [],
+   "trava": [],
+   "contrato": {
+    "rotas_novas": [
+     {
+      "metodo": "PUT",
+      "caminho": "(edição do Horário — caminho não definido)",
+      "o_que_faz": "editar um Horário existente (proposto)"
+     }
+    ],
+    "rotas_alteradas": [
+     {
+      "metodo": "POST",
+      "caminho": "/session/instantiate",
+      "o_que_faz": "aceitar ausência de schedule_id para o avulso (proposto)"
+     }
+    ],
+    "campos": [],
+    "tabelas": [],
+    "eventos_externos": []
+   },
+   "telas_que_esperam": [
+    "club-web/src/app/agenda/actions.ts"
+   ],
+   "pronto_para_agente": true,
+   "riscos": []
+  },
+  {
+   "id": 223,
+   "titulo_curto": "Alcance do porteiro",
+   "titulo": "Escopo por Clube 5/6 — o alcance do porteiro: o que ele enxerga no dia",
+   "estado": "open",
+   "tipo": "fatia",
+   "labels": [
+    "ready-for-agent"
+   ],
+   "jornada": "portaria",
+   "onda": 1,
+   "o_que_e": "O porteiro só enxerga os Horários do dia do Clube em que trabalha, e só enquanto o Vínculo dele vale.",
+   "como_funciona": [
+    "Predicado 'em serviço' calculado por requisição, nunca gravado.",
+    "Vínculo vencido devolve 403, não lista vazia."
+   ],
+   "bloqueado_por": [],
+   "trava": [
+    241
+   ],
+   "contrato": {
+    "rotas_novas": [],
+    "rotas_alteradas": [],
+    "campos": [],
+    "tabelas": [
+     "memberships",
+     "gate_assignments"
+    ],
+    "eventos_externos": []
+   },
+   "telas_que_esperam": [],
+   "pronto_para_agente": true,
+   "riscos": []
+  },
+  {
+   "id": 224,
+   "titulo_curto": "Criação escopada por Clube",
+   "titulo": "Escopo por Clube 6/6 — criar Horário recusa Clube fora do escopo",
+   "estado": "open",
+   "tipo": "fatia",
+   "labels": [
+    "ready-for-agent"
+   ],
+   "jornada": "tronco",
+   "onda": 1,
+   "o_que_e": "A instanciação de Horário passa a recusar quem não tem Vínculo com o Clube.",
+   "como_funciona": [
+    "Confere o Vínculo na mesma transação que cria o Horário."
+   ],
+   "bloqueado_por": [],
+   "trava": [],
+   "contrato": {
+    "rotas_novas": [],
+    "rotas_alteradas": [
+     {
+      "metodo": "POST",
+      "caminho": "/session/instantiate",
+      "o_que_faz": "passa a responder 403 para Clube fora do Vínculo"
+     }
+    ],
+    "campos": [],
+    "tabelas": [],
+    "eventos_externos": []
+   },
+   "telas_que_esperam": [],
+   "pronto_para_agente": true,
+   "riscos": []
+  },
+  {
+   "id": 225,
+   "titulo_curto": "Voucher no backend",
+   "titulo": "Backend: Voucher do Clube — tabela, rotas e as regras de arquivar e excluir",
+   "estado": "open",
+   "tipo": "needs-triage",
+   "labels": [
+    "needs-triage"
+   ],
+   "jornada": "clube",
+   "onda": 1,
+   "o_que_e": "Dá rota ao Voucher que o painel já mostra com mock: criar, editar, arquivar e excluir.",
+   "como_funciona": [
+    "Arquivar esconde e reserva o código; excluir só com zero usos.",
+    "O contador de usos depende do Pagamento; o resto não."
+   ],
+   "bloqueado_por": [],
+   "trava": [],
+   "contrato": {
+    "rotas_novas": [
+     {
+      "metodo": "GET",
+      "caminho": "(vouchers do Clube — caminho não definido)",
+      "o_que_faz": ""
+     },
+     {
+      "metodo": "POST",
+      "caminho": "(vouchers — caminho não definido)",
+      "o_que_faz": ""
+     },
+     {
+      "metodo": "DELETE",
+      "caminho": "(um voucher — caminho não definido)",
+      "o_que_faz": ""
+     }
+    ],
+    "rotas_alteradas": [],
+    "campos": [],
+    "tabelas": [
+     "vouchers"
+    ],
+    "eventos_externos": []
+   },
+   "telas_que_esperam": [
+    "club-web/src/services/vouchers.ts"
+   ],
+   "pronto_para_agente": false,
+   "riscos": []
+  },
+  {
+   "id": 226,
+   "titulo_curto": "Avisos aos jogadores",
+   "titulo": "Rotas de avisos ao grupo e de notificações do Clube",
+   "estado": "open",
+   "tipo": "needs-triage",
+   "labels": [
+    "needs-triage"
+   ],
+   "jornada": "clube",
+   "onda": 1,
+   "o_que_e": "O Clube manda um aviso a todos os Jogadores de um Horário, e o painel ganha a central de notificações.",
+   "como_funciona": [
+    "O aviso sai por SMS, falso nesta camada.",
+    "A central lista e marca como lidas."
+   ],
+   "bloqueado_por": [],
+   "trava": [],
+   "contrato": {
+    "rotas_novas": [
+     {
+      "metodo": "POST",
+      "caminho": "/session/:id/notice",
+      "o_que_faz": "grava o aviso e dispara o SMS (proposto)"
+     },
+     {
+      "metodo": "GET",
+      "caminho": "/notification",
+      "o_que_faz": "lista a central (proposto)"
+     }
+    ],
+    "rotas_alteradas": [],
+    "campos": [],
+    "tabelas": [],
+    "eventos_externos": [
+     "envio de SMS aos Jogadores (falso na camada 2)"
+    ]
+   },
+   "telas_que_esperam": [
+    "club-web/src/services/notices.ts",
+    "player-web/src/services/inbox.ts"
+   ],
+   "pronto_para_agente": false,
+   "riscos": [
+    "A central do Jogador também aponta para esta issue, mas o texto só descreve a do Clube."
+   ]
+  },
+  {
+   "id": 211,
+   "titulo_curto": "Tabela de Pagamento",
+   "titulo": "payments: tabela Pagamento + provider_tx_id único + Pendente durável",
+   "estado": "open",
+   "tipo": "fatia",
+   "labels": [
+    "ready-for-agent"
+   ],
+   "jornada": "tronco",
+   "onda": 2,
+   "o_que_e": "Cria a entidade Pagamento: um por Reserva, com o id da transação do provedor único para o webhook não duplicar efeito.",
+   "como_funciona": [
+    "Colunas: id, booking_id (um para um), status, provider_tx_id, amount_cents.",
+    "status nasce 'pending' e só muda por evento do provedor.",
+    "provider_tx_id com índice único garante a idempotência do webhook."
+   ],
+   "bloqueado_por": [],
+   "trava": [],
+   "contrato": {
+    "rotas_novas": [],
+    "rotas_alteradas": [],
+    "campos": [
+     "payments.booking_id",
+     "payments.provider_tx_id (UNIQUE)"
+    ],
+    "tabelas": [
+     "payments"
+    ],
+    "eventos_externos": []
+   },
+   "telas_que_esperam": [],
+   "pronto_para_agente": true,
+   "riscos": [
+    "Um Pagamento 'pending' ligado a booking_id pressupõe Reserva antes do pagamento, o que colide com 'Reserva só existe paga'."
+   ]
+  },
+  {
+   "id": 212,
+   "titulo_curto": "Valor por Horário",
+   "titulo": "Alocação de valor por Horário, base congelada na Reserva",
+   "estado": "open",
+   "tipo": "fatia",
+   "labels": [
+    "ready-for-agent"
+   ],
+   "jornada": "tronco",
+   "onda": 2,
+   "o_que_e": "Guarda quanto de cada Reserva é quadra e quanto é equipamento, para o estorno parcial pedir o número certo.",
+   "como_funciona": [
+    "Valores em centavos, congelados no momento da Reserva.",
+    "O texto não diz em que tabela as parcelas moram."
+   ],
+   "bloqueado_por": [],
+   "trava": [],
+   "contrato": {
+    "rotas_novas": [],
+    "rotas_alteradas": [],
+    "campos": [],
+    "tabelas": [],
+    "eventos_externos": []
+   },
+   "telas_que_esperam": [],
+   "pronto_para_agente": true,
+   "riscos": []
+  },
+  {
+   "id": 213,
+   "titulo_curto": "Interface do provedor",
+   "titulo": "Interface do provedor de pagamento + implementação atrás dela",
+   "estado": "open",
+   "tipo": "fatia",
+   "labels": [
+    "ready-for-agent"
+   ],
+   "jornada": "tronco",
+   "onda": 2,
+   "o_que_e": "O domínio fala só com uma interface; o SDK do provedor fica escondido atrás dela e é testado com um provedor falso.",
+   "como_funciona": [
+    "Cria a cobrança com split para a carteira da plataforma.",
+    "Estorno parcial pelo valor alocado."
+   ],
+   "bloqueado_por": [],
+   "trava": [],
+   "contrato": {
+    "rotas_novas": [],
+    "rotas_alteradas": [],
+    "campos": [],
+    "tabelas": [],
+    "eventos_externos": [
+     "criar cobrança com split (provedor)",
+     "estorno parcial (provedor)"
+    ]
+   },
+   "telas_que_esperam": [],
+   "pronto_para_agente": true,
+   "riscos": [
+    "O caminho do cartão decidido depois (fatura hospedada, exclusão aos 10 minutos) não está nesta fatia."
+   ]
+  },
+  {
+   "id": 214,
+   "titulo_curto": "Webhook e conciliação",
+   "titulo": "Conciliação: webhook idempotente + consulta periódica",
+   "estado": "open",
+   "tipo": "fatia",
+   "labels": [
+    "ready-for-agent"
+   ],
+   "jornada": "tronco",
+   "onda": 2,
+   "o_que_e": "O estado do Pagamento vem só do provedor: webhook idempotente pelo id da transação, e uma consulta periódica para o que o webhook perdeu.",
+   "como_funciona": [
+    "Confirmação é o gatilho que torna a Reserva real.",
+    "Evento repetido não tem efeito."
+   ],
+   "bloqueado_por": [],
+   "trava": [],
+   "contrato": {
+    "rotas_novas": [
+     {
+      "metodo": "POST",
+      "caminho": "(webhook do provedor — caminho não definido)",
+      "o_que_faz": ""
+     }
+    ],
+    "rotas_alteradas": [],
+    "campos": [],
+    "tabelas": [],
+    "eventos_externos": [
+     "webhook de pagamento do provedor",
+     "consulta periódica ao provedor"
+    ]
+   },
+   "telas_que_esperam": [],
+   "pronto_para_agente": true,
+   "riscos": [
+    "'Ativar a Reserva' supõe uma Reserva em estado anterior ao pago, que a tabela de reservas não tem."
+   ]
+  },
+  {
+   "id": 231,
+   "titulo_curto": "Estornos no backend",
+   "titulo": "Backend: Estornos — fila, estado pendente do Clube e reenvio pelo webhook",
+   "estado": "open",
+   "tipo": "needs-triage",
+   "labels": [
+    "needs-triage"
+   ],
+   "jornada": "clube",
+   "onda": 3,
+   "o_que_e": "Dá rota à fila de estornos do painel: o que falhou por falta de saldo espera, e o reenvio volta a 'em processamento'.",
+   "como_funciona": [
+    "O webhook decide o estado final, nunca a tela."
+   ],
+   "bloqueado_por": [
+    "pagamento"
+   ],
+   "trava": [],
+   "contrato": {
+    "rotas_novas": [
+     {
+      "metodo": "GET",
+      "caminho": "(estornos do Clube — caminho não definido)",
+      "o_que_faz": ""
+     },
+     {
+      "metodo": "POST",
+      "caminho": "(reenviar estorno — caminho não definido)",
+      "o_que_faz": ""
+     }
+    ],
+    "rotas_alteradas": [],
+    "campos": [],
+    "tabelas": [
+     "refunds"
+    ],
+    "eventos_externos": [
+     "webhook de estorno do provedor"
+    ]
+   },
+   "telas_que_esperam": [
+    "club-web/src/services/refunds.ts"
+   ],
+   "pronto_para_agente": false,
+   "riscos": []
+  },
+  {
+   "id": 232,
+   "titulo_curto": "Financeiro do Clube",
+   "titulo": "Backend: Financeiro do Horário — o Pagamento decomposto em quadra, equipamento e taxa",
+   "estado": "open",
+   "tipo": "needs-triage",
+   "labels": [
+    "needs-triage"
+   ],
+   "jornada": "clube",
+   "onda": 3,
+   "o_que_e": "Soma por Horário o que entrou, o que fica com o Clube e o que foi estornado.",
+   "como_funciona": [
+    "Leitura só; nada é gravado aqui."
+   ],
+   "bloqueado_por": [],
+   "trava": [],
+   "contrato": {
+    "rotas_novas": [
+     {
+      "metodo": "GET",
+      "caminho": "(financeiro do Horário — caminho não definido)",
+      "o_que_faz": ""
+     }
+    ],
+    "rotas_alteradas": [],
+    "campos": [],
+    "tabelas": [],
+    "eventos_externos": []
+   },
+   "telas_que_esperam": [
+    "club-web/src/services/finance.ts"
+   ],
+   "pronto_para_agente": false,
+   "riscos": [
+    "Diz que a taxa incide sobre a quadra já descontada pelo Voucher; o ADR da taxa diz valor cheio."
+   ]
+  },
+  {
+   "id": 233,
+   "titulo_curto": "Conta do jogador e compra",
+   "titulo": "PRD: a conta do jogador e as rotas da compra",
+   "estado": "open",
+   "tipo": "prd-a-escrever",
+   "labels": [
+    "wayfinder:task"
+   ],
+   "jornada": "jogador",
+   "onda": 3,
+   "o_que_e": "O PRD a escrever para o Jogador comprar de verdade: conta que nasce no primeiro código, Minhas reservas e cancelar.",
+   "como_funciona": [
+    "Conta nasce no primeiro código confirmado por SMS.",
+    "Cancelar devolve pelo estorno do Pagamento."
+   ],
+   "bloqueado_por": [
+    "pagamento"
+   ],
+   "trava": [
+    251
+   ],
+   "contrato": {
+    "rotas_novas": [
+     {
+      "metodo": "GET",
+      "caminho": "(minhas reservas — caminho não definido)",
+      "o_que_faz": ""
+     },
+     {
+      "metodo": "POST",
+      "caminho": "(cancelar pelo Jogador — caminho não definido)",
+      "o_que_faz": ""
+     }
+    ],
+    "rotas_alteradas": [
+     {
+      "metodo": "POST",
+      "caminho": "/auth/verify-otp",
+      "o_que_faz": "passa a criar a conta do Jogador"
+     }
+    ],
+    "campos": [],
+    "tabelas": [
+     "bookings",
+     "payments"
+    ],
+    "eventos_externos": []
+   },
+   "telas_que_esperam": [
+    "player-web/src/services/bookings.ts",
+    "player-app/lib/gateways/bookings.dart"
+   ],
+   "pronto_para_agente": false,
+   "riscos": [
+    "Transferir a reserva aparece esperando este PRD no site, mas não está entre os itens dele."
+   ]
+  },
+  {
+   "id": 241,
+   "titulo_curto": "Portaria no backend",
+   "titulo": "PRD: a portaria no backend — lista do dia, check-in e o Vínculo da sessão",
+   "estado": "open",
+   "tipo": "prd-a-escrever",
+   "labels": [
+    "wayfinder:task"
+   ],
+   "jornada": "portaria",
+   "onda": 3,
+   "o_que_e": "O PRD a escrever para a tela da portaria ler e gravar de verdade: a lista do dia e o check-in.",
+   "como_funciona": [
+    "Check-in é ato nomeado e idempotente.",
+    "A portaria nunca trava: sem rede, lê a última lista."
+   ],
+   "bloqueado_por": [
+    221,
+    223
+   ],
+   "trava": [
+    251
+   ],
+   "contrato": {
+    "rotas_novas": [
+     {
+      "metodo": "GET",
+      "caminho": "(lista do dia — caminho não definido)",
+      "o_que_faz": ""
+     },
+     {
+      "metodo": "POST",
+      "caminho": "(check-in — caminho não definido)",
+      "o_que_faz": ""
+     }
+    ],
+    "rotas_alteradas": [],
+    "campos": [],
+    "tabelas": [
+     "checkins"
+    ],
+    "eventos_externos": []
+   },
+   "telas_que_esperam": [
+    "club-web/src/services/gate.ts"
+   ],
+   "pronto_para_agente": false,
+   "riscos": [
+    "Como a sessão só-portaria escolhe o Clube está em aberto; se o PRD não fechar, vira grilling."
+   ]
+  },
+  {
+   "id": 251,
+   "titulo_curto": "Integrações reais e publicação",
+   "titulo": "PRD: camada 3 — provedor real, SMS real e tudo no ar",
+   "estado": "open",
+   "tipo": "prd-a-escrever",
+   "labels": [
+    "wayfinder:task"
+   ],
+   "jornada": "camada3",
+   "onda": 4,
+   "o_que_e": "Troca os falsos pelos reais e publica backend e sites.",
+   "como_funciona": [],
+   "bloqueado_por": [
+    233,
+    241
+   ],
+   "trava": [
+    252
+   ],
+   "contrato": {
+    "rotas_novas": [],
+    "rotas_alteradas": [],
+    "campos": [],
+    "tabelas": [],
+    "eventos_externos": [
+     "provedor de pagamento real",
+     "SMS em produção"
+    ]
+   },
+   "telas_que_esperam": [],
+   "pronto_para_agente": false,
+   "riscos": [
+    "Depende da chave do provedor do primeiro Clube."
+   ]
+  },
+  {
+   "id": 252,
+   "titulo_curto": "Entrar com Google e Apple",
+   "titulo": "Entrar com Google e Apple — depois do piloto",
+   "estado": "open",
+   "tipo": "prd-a-escrever",
+   "labels": [
+    "wayfinder:task"
+   ],
+   "jornada": "camada3",
+   "onda": 4,
+   "o_que_e": "Login social, com o telefone continuando como identidade.",
+   "como_funciona": [],
+   "bloqueado_por": [
+    251
+   ],
+   "trava": [],
+   "contrato": {
+    "rotas_novas": [],
+    "rotas_alteradas": [],
+    "campos": [],
+    "tabelas": [],
+    "eventos_externos": []
+   },
+   "telas_que_esperam": [],
+   "pronto_para_agente": false,
+   "riscos": []
+  }
+ ],
+ "arestas": [
+  {
+   "de": 201,
+   "para": 204,
+   "tipo": "nativa",
+   "motivo": ""
+  },
+  {
+   "de": 202,
+   "para": 204,
+   "tipo": "nativa",
+   "motivo": ""
+  },
+  {
+   "de": 203,
+   "para": 204,
+   "tipo": "nativa",
+   "motivo": ""
+  },
+  {
+   "de": "pagamento",
+   "para": 231,
+   "tipo": "nativa",
+   "motivo": ""
+  },
+  {
+   "de": "pagamento",
+   "para": 233,
+   "tipo": "nativa",
+   "motivo": ""
+  },
+  {
+   "de": 221,
+   "para": 241,
+   "tipo": "nativa",
+   "motivo": ""
+  },
+  {
+   "de": 223,
+   "para": 241,
+   "tipo": "nativa",
+   "motivo": ""
+  },
+  {
+   "de": 233,
+   "para": 251,
+   "tipo": "nativa",
+   "motivo": ""
+  },
+  {
+   "de": 241,
+   "para": 251,
+   "tipo": "nativa",
+   "motivo": ""
+  },
+  {
+   "de": 251,
+   "para": 252,
+   "tipo": "nativa",
+   "motivo": ""
+  },
+  {
+   "de": 203,
+   "para": 211,
+   "tipo": "inferida",
+   "motivo": "O Pagamento pendente segura o Horário, não uma Reserva: a chave booking_id da tabela muda com o ADR."
+  },
+  {
+   "de": 204,
+   "para": 213,
+   "tipo": "inferida",
+   "motivo": "A emenda do PRD entra antes da fatia do provedor (fatura hospedada, exclusão aos 10 min)."
+  },
+  {
+   "de": 204,
+   "para": 214,
+   "tipo": "inferida",
+   "motivo": "Pagamento que chega depois da exclusão vira Reserva ou estorno automático: é regra da conciliação."
+  },
+  {
+   "de": 211,
+   "para": 212,
+   "tipo": "inferida",
+   "motivo": "Ordem das fatias dentro do PRD do Pagamento."
+  },
+  {
+   "de": 212,
+   "para": 213,
+   "tipo": "inferida",
+   "motivo": "Ordem das fatias dentro do PRD do Pagamento."
+  },
+  {
+   "de": 213,
+   "para": 214,
+   "tipo": "inferida",
+   "motivo": "Ordem das fatias dentro do PRD do Pagamento."
+  },
+  {
+   "de": "pagamento",
+   "para": 225,
+   "tipo": "inferida",
+   "motivo": "Só o contador de usos do Voucher depende do Pagamento; tabela, rotas e arquivar, não."
+  },
+  {
+   "de": "pagamento",
+   "para": 232,
+   "tipo": "inferida",
+   "motivo": "O Financeiro lê o Pagamento decomposto; sem ele não há o que somar."
+  }
+ ],
+ "alertas": [
+  {
+   "gravidade": "trava",
+   "etiqueta": "trava o Pagamento",
+   "titulo": "O Pagamento pendente não tem onde morar",
+   "texto": "A tabela Pagamento nasce ligada a uma Reserva (booking_id), mas a Reserva só existe paga e só aceita os estados ativa e cancelada. O mapa do pagamento já propôs a saída: a cobrança em aberto segura o Horário por 10 minutos. Falta virar ADR.",
+   "resolve": [
+    203,
+    211,
+    214
+   ]
+  },
+  {
+   "gravidade": "trava",
+   "etiqueta": "trava o Pagamento",
+   "titulo": "As fatias do Pagamento parecem livres, mas não estão",
+   "texto": "As quatro fatias estão ready-for-agent e sem bloqueio, mas a emenda do PRD tem de entrar antes da fatia do provedor. Um agente que pegue essa fatia hoje constrói o caminho recusado.",
+   "resolve": [
+    204,
+    213
+   ]
+  },
+  {
+   "gravidade": "corrigir",
+   "etiqueta": "corrigir no texto",
+   "titulo": "Base da taxa com Voucher diverge",
+   "texto": "O Financeiro diz que a taxa incide sobre a quadra já descontada; o ADR da taxa e o PRD do Pagamento dizem valor cheio.",
+   "resolve": [
+    232
+   ]
+  },
+  {
+   "gravidade": "corrigir",
+   "etiqueta": "corrigir no texto",
+   "titulo": "Agenda com 'pago/pendente'",
+   "texto": "A grade por HTTP pede a situação pago/pendente, mas se a Reserva só existe paga, todo Horário ocupado está pago.",
+   "resolve": [
+    221
+   ]
+  },
+  {
+   "gravidade": "corrigir",
+   "etiqueta": "corrigir no texto",
+   "titulo": "Telas apontando para quem não as cobre",
+   "texto": "Transferir a reserva espera a conta do Jogador, e a central do Jogador espera os Avisos, mas nenhum dos dois textos as inclui.",
+   "resolve": [
+    233,
+    226
+   ]
+  },
+  {
+   "gravidade": "corrigir",
+   "etiqueta": "corrigir no texto",
+   "titulo": "Comentário velho no app",
+   "texto": "Comentários no app ainda dizem que o cartão é tokenizado no aparelho, o que a decisão do caminho do cartão recusou.",
+   "resolve": []
+  }
+ ],
+ "contrato_atual": {
+  "origem": "docs/openapi.json",
+  "como_nasce_html": "O contrato é gerado do backend. O front só ganha tipo quando a rota existir: até lá o seam fica com <code>// sem contrato — #N</code>.",
+  "rotas": [
+   {
+    "metodo": "GET",
+    "caminho": "/health",
+    "operationId": "getHealth"
+   },
+   {
+    "metodo": "POST",
+    "caminho": "/auth/request-otp",
+    "operationId": "requestOtp"
+   },
+   {
+    "metodo": "POST",
+    "caminho": "/auth/verify-otp",
+    "operationId": "verifyOtp"
+   },
+   {
+    "metodo": "POST",
+    "caminho": "/auth/logout",
+    "operationId": "logout"
+   },
+   {
+    "metodo": "GET",
+    "caminho": "/club",
+    "operationId": "listClubs"
+   },
+   {
+    "metodo": "GET",
+    "caminho": "/club/{id}",
+    "operationId": "getClub"
+   },
+   {
+    "metodo": "GET",
+    "caminho": "/court",
+    "operationId": "listCourts"
+   },
+   {
+    "metodo": "POST",
+    "caminho": "/court",
+    "operationId": "createCourt"
+   },
+   {
+    "metodo": "PUT",
+    "caminho": "/court/{id}",
+    "operationId": "updateCourt"
+   },
+   {
+    "metodo": "GET",
+    "caminho": "/schedule",
+    "operationId": "listSchedules"
+   },
+   {
+    "metodo": "POST",
+    "caminho": "/schedule",
+    "operationId": "createSchedule"
+   },
+   {
+    "metodo": "GET",
+    "caminho": "/session",
+    "operationId": "listSessions"
+   },
+   {
+    "metodo": "GET",
+    "caminho": "/session/{id}",
+    "operationId": "getSession"
+   },
+   {
+    "metodo": "POST",
+    "caminho": "/session/instantiate",
+    "operationId": "instantiateSession"
+   },
+   {
+    "metodo": "GET",
+    "caminho": "/player",
+    "operationId": "listPlayers"
+   },
+   {
+    "metodo": "GET",
+    "caminho": "/staff",
+    "operationId": "listStaff"
+   },
+   {
+    "metodo": "POST",
+    "caminho": "/staff/invite",
+    "operationId": "inviteStaff"
+   }
+  ]
+ },
+ "pistas_de_recurso": [
+  [
+   "voucher",
+   "voucher"
+  ],
+  [
+   "estorno",
+   "refund"
+  ],
+  [
+   "financeiro",
+   "session"
+  ],
+  [
+   "agenda",
+   "session"
+  ],
+  [
+   "horário",
+   "session"
+  ],
+  [
+   "reserva",
+   "booking"
+  ],
+  [
+   "jogador",
+   "booking"
+  ],
+  [
+   "check-in",
+   "gate"
+  ],
+  [
+   "lista do dia",
+   "gate"
+  ],
+  [
+   "webhook",
+   "payment"
+  ]
+ ],
+ "titulo_externos": "Fora do backend (falso na camada 2)",
+ "notas_contrato": [
+  {
+   "titulo": "O caminho do cartão no contrato",
+   "itens": [
+    "A interface do provedor cria a fatura com split e exclui a cobrança aos 10 minutos.",
+    "A cobrança de cartão em aberto segura o Horário por 10 minutos, configurável por Clube.",
+    "Pagamento confirmado depois da exclusão: vira Reserva se o Horário está livre; se não, estorno automático."
+   ]
+  }
+ ],
+ "adrs": [
+  {
+   "id": "0004",
+   "titulo": "Um Pagamento por Reserva, com alocação de valor",
+   "status": "accepted",
+   "essencia": "Uma cobrança por Reserva; o valor de cada parte fica registrado para o estorno parcial."
+  },
+  {
+   "id": "0007",
+   "titulo": "Split no provedor com conta própria do Clube",
+   "status": "accepted",
+   "essencia": "A taxa da plataforma sai no split; o Clube recebe direto."
+  },
+  {
+   "id": "0012",
+   "titulo": "A Reserva só existe paga",
+   "status": "accepted",
+   "essencia": "Não há pré-reserva; desconto vira Voucher."
+  },
+  {
+   "id": "0018",
+   "titulo": "Taxa sobre o valor cheio da quadra",
+   "status": "accepted",
+   "essencia": "Base da taxa é a quadra sem desconto."
+  },
+  {
+   "id": "0027",
+   "titulo": "Escopo por Clube é Vínculo, não coluna",
+   "status": "accepted",
+   "essencia": "Quem vê o quê se resolve por requisição, pelo Vínculo."
+  }
+ ],
+ "cores_label": {
+  "ready-for-agent": {
+   "cor": "0e8a16",
+   "descricao": "Fully specified, ready for an AFK agent"
+  },
+  "needs-triage": {
+   "cor": "d93f0b",
+   "descricao": "Maintainer needs to evaluate this issue"
+  },
+  "wayfinder:task": {
+   "cor": "FBCA04",
+   "descricao": ""
+  },
+  "wayfinder:grilling": {
+   "cor": "D93F0B",
+   "descricao": ""
+  }
+ }
+}
