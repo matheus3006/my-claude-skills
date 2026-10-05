@@ -54,7 +54,8 @@ configurado. Rode `/setup-matt-pocock-skills` uma vez no repositório antes do p
 | [`grilling`](grilling/) | Grill the user relentlessly about a plan, decision, or idea. Use when the user wants to stress-test their thinking, or uses any 'grill' trigger phrases. |
 | [`handoff`](handoff/) | Compact the current conversation into a handoff document for another agent to pick up. |
 | [`human-architect-mindset`](human-architect-mindset/) | Systematic architectural thinking for irreplaceable human capabilities - domain modeling, systems thinking, constraint navigation, and AI-aware problem decom… |
-| [`implement`](implement/) | Implement a piece of work based on a PRD or set of issues. |
+| [`implement`](implement/) | Implement a piece of work based on a spec or set of tickets. |
+| [`implement-spec`](implement-spec/) | Implement a whole spec in one run over its ticket graph, one implementer subagent at a time (local patch), on one integration branch. |
 | [`improve-codebase-architecture`](improve-codebase-architecture/) | Scan a codebase for deepening opportunities, present them as a visual HTML report, then grill through whichever one you pick. |
 | [`iniciar-prototipo`](iniciar-prototipo/) | Sobe o servidor HTTP local de um protótipo HTML+JSX e abre no browser. Use quando o usuário pedir para rodar, servir, abrir, subir ou ver o protótipo, ou quand… |
 | [`integrar-ao-prototipo`](integrar-ao-prototipo/) | Adiciona uma tela, fluxo ou funcionalidade nova a um protótipo HTML+JSX que já existe, reusando os primitivos e tokens dele. Use quando o usuário pedir para in… |
@@ -63,14 +64,15 @@ configurado. Rode `/setup-matt-pocock-skills` uma vez no repositório antes do p
 | [`novo-prototipo`](novo-prototipo/) | Cria um protótipo HTML+JSX do zero (React 18 + Babel standalone, zero build step) quando ainda não existe protótipo para a tela ou fluxo. Use ao iniciar uma te… |
 | [`portar-prototipo`](portar-prototipo/) | Traduz um protótipo HTML+JSX aprovado para a stack real do projeto — mapeia componente para arquivo, token do protótipo para o tema da stack, e gera o plano de… |
 | [`prototype`](prototype/) | Build a throwaway prototype to answer a design question. Use when the user wants to sanity-check whether a state model or logic feels right, or explore what a … |
+| [`pr`](pr/) | Shape of a PR body: smallest visual that shows the change, before/after evidence, one-way or two-way door. |
 | [`research`](research/) | Investigate a question against high-trust primary sources and capture the findings as a Markdown file in the repo. Use when the user wants a topic researched, … |
-| [`resolving-merge-conflicts`](resolving-merge-conflicts/) | Use when you need to resolve an in-progress git merge/rebase conflict. |
+| [`retro`](retro/) | Retrospective on a coding session: suggests changes to the agent environment, not the code. |
 | [`setup-matt-pocock-skills`](setup-matt-pocock-skills/) | Configure this repo for the engineering skills — set up its issue tracker, triage label vocabulary, and domain doc layout. Run once before first use of the oth… |
 | [`sincronizar-prototipo`](sincronizar-prototipo/) | Reflete uma tela já aprovada no protótipo consolidado (vitrine) para evitar drift, faz o bump do cache-bust em todos os scripts e revalida a ordem de carregame… |
 | [`tdd`](tdd/) | Test-driven development. Use when the user wants to build features or fix bugs test-first, mentions "red-green-refactor", or wants integration tests. |
 | [`teach`](teach/) | Teach the user a new skill or concept, within this workspace. |
-| [`to-issues`](to-issues/) | Break a plan, spec, or PRD into independently-grabbable issues on the project issue tracker using tracer-bullet vertical slices. |
-| [`to-prd`](to-prd/) | Turn the current conversation into a PRD and publish it to the project issue tracker — no interview, just synthesis of what you've already discussed. |
+| [`to-spec`](to-spec/) | Turn the current conversation into a spec (PRD) and publish it to the issue tracker. Old name: `to-prd`. |
+| [`to-tickets`](to-tickets/) | Split a spec into tracer-bullet tickets with declared blocking edges. Old name: `to-issues`. |
 | [`triage`](triage/) | Move issues and external PRs through a state machine of triage roles — categorise, verify, grill if needed, and write agent-ready briefs. |
 | [`ui-typography`](ui-typography/) | > Professional typography rules for UI design, web applications, software interfaces, and all screen-based text. Enforces timeless typographic correctness th… |
 | [`ui-ux-pro-max`](ui-ux-pro-max/) | UI/UX design intelligence for web and mobile. Includes 50+ styles, 161 color palettes, 57 font pairings, 161 product types, 99 UX guidelines, and 25 chart ty… |

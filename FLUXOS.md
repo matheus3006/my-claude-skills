@@ -28,21 +28,30 @@ ideia solta, grande demais para uma sessão
                                    └─ é de aparência?     → família *-prototipo
         │
         ▼  (mapa fechado: não sobrou nada para decidir)
-   /to-prd ────── vira PRD no issue tracker
+   /to-spec ───── vira spec (PRD) no issue tracker
         │
         ▼
-   /to-issues ─── fatia em issues que qualquer um pega sozinho
+   /to-tickets ── fatia em tickets com bloqueios declarados
         │
-        ▼  (uma sessão limpa por issue)
-   /implement ─── constrói
+        ├─ /implement ....... um ticket por sessão limpa
+        └─ /implement-spec .. a spec inteira numa rodada, um implementador por vez
+        │
+        ▼
+   /code-review ─ revisa o diff (Standards + Spec)
+        │
+        ▼
+   /pr ────────── corpo da PR: menor visual, antes/depois, porta de mão única ou dupla
 ```
+
+`/retro` existe (olha a sessão para trás e propõe mudanças no ambiente do agente, não no
+código), mas fica de uso avulso: não é passo obrigatório.
 
 ## Pré-requisito
 
 `/setup-matt-pocock-skills` roda **uma vez por repositório**, antes de tudo. Ele grava
 onde ficam as issues (GitHub, GitLab, ou arquivos markdown em `.scratch/`), o vocabulário
 de etiquetas da triagem e onde moram os documentos de domínio. Sem isso, o wayfinder não
-sabe onde criar o mapa e o `/to-prd` não sabe onde publicar o PRD.
+sabe onde criar o mapa e o `/to-spec` não sabe onde publicar a spec.
 
 ## 1. Ideia grande demais → `/wayfinder`
 
@@ -132,10 +141,10 @@ stack, e componente do protótipo → arquivo real. O que fazer com elas depende
 
 - **Cabe numa sessão** → o próprio `/portar-prototipo` implementa e fecha, verificando com
   screenshot lado a lado nos dois temas.
-- **Não cabe** → pare depois do plano e leve as tabelas para o `/to-prd`. Elas viram a
+- **Não cabe** → pare depois do plano e leve as tabelas para o `/to-spec`. Elas viram a
   seção de decisões de implementação do PRD — o template dele já prevê inline de trecho
-  vindo de protótipo quando a prosa não é precisa o bastante. Daí `/to-issues` fatia, e
-  cada issue vira uma sessão de `/implement`.
+  vindo de protótipo quando a prosa não é precisa o bastante. Daí `/to-tickets` fatia, e
+  cada ticket vira uma sessão de `/implement` (ou entra numa rodada de `/implement-spec`).
 
 Em qualquer um dos dois, o protótipo continua sendo a referência visual: a comparação
 lado a lado vale por issue, não só no fim.
@@ -145,19 +154,19 @@ lado a lado vale por issue, não só no fim.
 O wayfinder cobra um mapa, e mapa para viagem curta é desperdício. Pule quando:
 
 - **A ideia já está clara** — vá direto para `/grilling` (ou `/grill-with-docs`, se há
-  código e você quer que o aprendizado fique gravado em `CONTEXT.md`), e daí para
-  `/to-prd`.
+  código e você quer que o aprendizado fique gravado em `GLOSSARY.md`), e daí para
+  `/to-spec`.
 - **É só uma tela** — vá direto para `/novo-prototipo`. Protótipo não precisa de PRD por
   cima.
 - **É bug ou pedido que chegou de fora** — `/triage` põe na fila, `/implement` pega.
-  Issue que o `/to-issues` gerou já nasce pronta: não triagem de novo.
+  Ticket que o `/to-tickets` gerou já nasce pronta: não triagem de novo.
 
 O próprio wayfinder avisa: se a conversa inicial não revelar névoa nenhuma, ele manda
 parar e perguntar como você quer seguir.
 
 ## Regras que atravessam tudo
 
-- **Contexto limpo por issue.** Do `/grilling` até o `/to-issues`, tudo numa janela só,
+- **Contexto limpo por issue.** Do `/grilling` até o `/to-tickets`, tudo numa janela só,
   para o PRD e as issues nascerem do mesmo raciocínio. Cada `/implement` depois começa do
   zero, lendo a issue.
 - **Janela cheia não se resolve empurrando.** Use `/handoff` para fechar o que foi
@@ -169,6 +178,7 @@ parar e perguntar como você quer seguir.
 
 ## Nota sobre o `/ask-matt`
 
-O `/ask-matt` é o roteador do conjunto de engenharia — pergunta a ele quando não lembrar
-qual skill usar. Ele é anterior ao `/wayfinder`, ao `/grilling` e à família de protótipo,
-então não cita nenhum dos três. Para o caminho atualizado, este arquivo é a referência.
+O `/ask-matt` é o roteador do conjunto de engenharia: pergunte a ele quando não lembrar
+qual skill usar. Desde a v1.3 ele já cita o `/wayfinder`, o `/grilling` e o `/prototype`,
+mas não conhece a família `*-prototipo` nem as duas adaptações daqui (cadeia invocável por
+agente e `/implement-spec` em fila). Para o caminho atualizado, este arquivo é a referência.
