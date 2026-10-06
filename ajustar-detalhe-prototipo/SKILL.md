@@ -13,7 +13,7 @@ vivo com guias objetivas, e exporta os números já mapeados às linhas de códi
 O humano ajusta; você porta uma vez. Seu papel muda de *"adivinhar o número"* para
 *"construir o botão e ler o resultado"*.
 
-**Leia primeiro:** `~/.claude/prototipo-html/references/convencoes.md`.
+**Leia primeiro:** `~/.claude/skills/prototipo-html/references/convencoes.md`.
 
 ## O gatilho
 

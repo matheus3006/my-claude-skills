@@ -126,8 +126,8 @@ button { cursor: pointer; }
   position: relative;
 }
 
-/* Header enxuto: so marca + modo. Todo controle mora no painel flutuante,
-   entao o header nunca disputa espaco com o numero de telas do prototipo. */
+/* Header enxuto: marca, abas e modo. Todo controle mora no painel flutuante, e as
+   abas rolam na horizontal: o header nunca disputa espaco com o numero de telas. */
 .showcase-header {
   flex-shrink: 0;
   display: flex; align-items: center; gap: var(--space-5);
@@ -147,7 +147,34 @@ button { cursor: pointer; }
 [data-theme="dark"] .showcase-brand { color: var(--primary); }
 .showcase-brand .accent { color: var(--accent); }
 
+/* Abas: uma por visao (superficie ou papel), declaradas em visoes.jsx. */
+.showcase-abas {
+  flex: 1; min-width: 0;
+  display: flex; gap: var(--space-1);
+  overflow-x: auto;
+}
+.showcase-abas button {
+  border: 0; background: transparent;
+  padding: var(--space-2) var(--space-3);
+  font-size: 13px; font-weight: 700;
+  color: var(--muted);
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+}
+.showcase-abas button:hover { color: var(--fg); }
+.showcase-abas button.active {
+  color: var(--fg);
+  background: var(--surface-2);
+  box-shadow: inset 0 -2px 0 var(--accent);
+}
+.showcase-abas button:focus-visible,
+.showcase-modo button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
 .showcase-modo {
+  margin-left: auto;
   display: flex; gap: 2px;
   padding: 3px;
   background: var(--surface-2);
@@ -184,11 +211,20 @@ button { cursor: pointer; }
    prototipo pequeno e volta a morder no grande. */
 .showcase-body--grade { align-items: flex-start; }
 
-/* Modo Showcase: todas as telas lado a lado */
+/* Modo print: so a tela na moldura, sem header nem painel. */
+.showcase-body--print { height: 100vh; padding: 0; }
+
+/* Modo Showcase: as rotinas da aba, cada uma com as telas em ordem */
 .showcase-grade {
-  display: flex; flex-wrap: wrap; gap: var(--space-5);
-  align-items: flex-start; justify-content: center;
+  display: flex; flex-direction: column; gap: var(--space-6);
   width: 100%; padding: var(--space-2);
+}
+.grade-rotina { display: flex; flex-direction: column; gap: var(--space-3); }
+.grade-rotina-titulo { font-size: 14px; font-weight: 800; color: var(--fg); }
+.grade-rotina-telas {
+  display: flex; gap: var(--space-3);
+  align-items: flex-start;
+  overflow-x: auto; padding-bottom: var(--space-2);
 }
 .grade-tile {
   display: flex; flex-direction: column; gap: var(--space-2);
@@ -199,7 +235,6 @@ button { cursor: pointer; }
   text-transform: uppercase; color: var(--muted);
 }
 .grade-tile-viewport {
-  width: 320px; height: 560px;
   background: var(--bg);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
@@ -282,6 +317,15 @@ button { cursor: pointer; }
   color: var(--surface);
 }
 
+.painel-contagem {
+  font-size: 12px; font-weight: 700;
+  color: var(--fg);
+  padding: var(--space-2);
+  background: var(--ok-soft);
+  border-radius: var(--radius-sm);
+}
+.painel-contagem.acima { background: var(--warn-soft); }
+
 .painel-reset {
   padding: var(--space-2);
   background: transparent;
@@ -321,6 +365,7 @@ button { cursor: pointer; }
   <script type="text/babel" src="components/ui.jsx?v=1"></script>
   <script type="text/babel" src="components/device.jsx?v=1"></script>
   <script type="text/babel" src="components/router.jsx?v=1"></script>
+  <script type="text/babel" src="components/visoes.jsx?v=1"></script>
   <script type="text/babel" src="components/painel.jsx?v=1"></script>
   <script type="text/babel" src="components/telas.jsx?v=1"></script>
   <script type="text/babel" src="components/app.jsx?v=1"></script>

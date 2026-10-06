@@ -1,14 +1,14 @@
 ---
 name: auditar-prototipo
-description: Audita um protótipo HTML+JSX contra o checklist de qualidade e devolve um relatório PASS/FAIL por item — ordem de carregamento, cache-bust, tokens, 8 estados visuais, contraste WCAG AA, i18n, console limpo e ausência de PII nos mocks. Use antes de aprovar um protótipo ou antes de portar para a stack real, e quando o usuário pedir revisão, auditoria, verificação ou "está pronto?". NÃO use para propor melhorias de design (melhorar-prototipo) — esta skill só verifica e reporta.
+description: Audita um protótipo HTML+JSX contra o checklist de qualidade e devolve um relatório PASS/FAIL por item — ordem de carregamento, cache-bust, tokens, 8 estados visuais e sem internet, abas e superfícies, toques de cada rotina, palavras do glossário, contraste WCAG AA, i18n, console limpo, prints da conferência e ausência de PII nos mocks. Use antes de aprovar um protótipo ou antes de portar para a stack real, e quando o usuário pedir revisão, auditoria, verificação ou "está pronto?". NÃO use para propor melhorias de design (melhorar-prototipo) — esta skill só verifica e reporta.
 ---
 
 # auditar-prototipo
 
 Gate de qualidade. Verifica, reporta e **não conserta sem pedir**.
 
-**Roteiro:** `~/.claude/prototipo-html/references/checklist-qualidade.md`.
-**Contrato:** `~/.claude/prototipo-html/references/convencoes.md`.
+**Roteiro:** `~/.claude/skills/prototipo-html/references/checklist-qualidade.md`.
+**Contrato:** `~/.claude/skills/prototipo-html/references/convencoes.md`.
 
 A auditoria é factual: cada item vira PASS, FAIL, WARN ou SKIP com evidência —
 arquivo e linha. Sem "parece ok". Item que você não conseguiu verificar é SKIP com o
@@ -21,11 +21,11 @@ Sem protótipo, pare e oriente `/novo-prototipo`.
 
 ## Passo 2 — Auditoria estática
 
-Sem subir servidor. Percorra as seções 1, 2, 5 e 7 do checklist.
+Sem subir servidor. Percorra as seções 1, 2, 5, 5b e 7 do checklist.
 
 **Ordem de carregamento** — extraia a sequência de `src="components/..."` do
 `index.html` e compare com
-`i18n → data → icons → ui → device → router → painel → <telas> → app`. Tela antes do
+`i18n → data → icons → ui → device → router → visoes → painel → <telas> → app`. Tela antes do
 `ui.jsx` é FAIL mesmo que ainda não use primitivo: quebra no primeiro uso.
 
 **Cache-bust** — todo script de componente tem `?v=N`, todos com o mesmo N.
@@ -46,25 +46,43 @@ decorativo — esses viram WARN sem ação.
 `TRANSLATIONS`. Chave usada e inexistente é FAIL (renderiza `undefined`). Multi-locale:
 chave que falta em um locale é FAIL — só aparece ao trocar o idioma.
 
+**Rotinas** — toda rota do `SCREEN_MAP` aparece em alguma rotina de `ROTINAS`; tela fora
+de rotina é FAIL.
+
+**Linguagem** — termos da lista _Avoid_ do glossário do projeto, siglas soltas e inglês nos
+valores do locale principal de `TRANSLATIONS`. Cada hit é FAIL com o termo do glossário
+que entra no lugar ("KDS" → "Cozinha").
+
 **PII e segredo nos mocks** — nome real, telefone, e-mail, endereço, documento, cartão,
 token, chave de API. Isto é **bloqueante**: protótipo vira link compartilhado, e PII
 real ali é vazamento. Reporte no topo, não no meio da lista.
 
 ## Passo 3 — Auditoria em runtime
 
-Suba com `/iniciar-prototipo` e, pelo preview MCP, cubra as seções 3, 4 e 6.
+Suba com `/iniciar-prototipo` e, pelo preview MCP, cubra as seções 3, 3b, 4, 6 e 8.
 
 **Console e rede** — `read_console_messages` sem erro nem warning do React;
 `read_network_requests` sem 404 em `components/*.jsx`.
 
-**Os 8 estados** — percorra o seletor de Estado no painel flutuante. Estado só conta se
-der para ver no showcase sem editar código. Confira que `empty` tem CTA, `error` tem
-ação de recuperação e `loading` não causa layout shift ao resolver.
+**Os 8 estados e o offline** — percorra o seletor de Estado no painel flutuante. Estado
+só conta se der para ver no showcase sem editar código. Confira que `empty` tem o
+primeiro passo, `error` tem ação de recuperação, `loading` não causa layout shift ao
+resolver e `offline` diz o que continua funcionando e o que espera — e que voltar do
+offline mostra o aviso de conexão de volta.
 
-**Superfícies e visões** — para cada visão (persona × plataforma), percorra as superfícies
-dela pelo painel: App em iOS e Android; Web em Desktop e Tablet. Conteúdo cortado ou scroll
-horizontal dentro da moldura é FAIL. Abra o Showcase de cada visão: tela de outra
-plataforma na grade (ex.: desktop no meio das telas de iPhone) é FAIL.
+**Abas e superfícies** — para cada aba, confira que ela abre na primeira superfície e no
+tema de abertura dela, e percorra as superfícies dela pelo painel. Conteúdo cortado ou
+scroll horizontal dentro da moldura é FAIL. Abra o Showcase de cada aba: tela de outra
+superfície na grade (ex.: computador no meio das telas de iPhone) é FAIL. Aba com
+`letraMinima`: meça o `fontSize` computado do texto visível; abaixo dela é FAIL.
+
+**Toques** — para cada rotina, escolha-a no grupo Rotina do painel e percorra o caminho
+principal tocando o mínimo possível, até a última tela. Leia `window.contagemDeToques` e
+reporte `toques/meta`. Acima da meta é FAIL.
+
+**Prints** — compare `prints/<rotina>/` com `?listarPrints=<rotina>` do protótipo
+servido. Print faltando é FAIL; abra uma amostra de cada superfície para confirmar que não
+saiu em branco.
 
 **Temas** — alterne Claro e Escuro no painel. Troca de tema não pode quebrar layout nem
 apagar texto.
@@ -113,6 +131,7 @@ e re-audite os itens tocados.
 
 - PASS em item que não foi verificado — use SKIP e diga por quê
 - Auditar só no tema light
+- Reportar toques sem ter percorrido a rotina pelo painel
 - Calcular contraste sobre o nome da CSS var em vez do valor resolvido
 - Reportar "console limpo" sem ter aberto o console
 - Corrigir durante a auditoria sem separar o relatório
