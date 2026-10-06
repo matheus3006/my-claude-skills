@@ -84,6 +84,37 @@ painel tem o grupo **Rotina**: escolher uma rotina abre a primeira tela e conta 
 A meta é `metaDeToques` da rotina, ou `META_DE_TOQUES` do projeto. Rotina acima da meta é
 achado do protótipo: a tela muda, não a meta.
 
+## Dúvidas A/B
+
+Quando uma tela da rotina tem **dúvida real de aparência** entre duas formas, o protótipo
+traz as duas e o humano escolhe na aprovação. Sem dúvida real, uma opção só: A/B não é
+jeito de adiar decisão que os documentos já tomaram, e dúvida de regra do negócio não se
+resolve com A/B (é pergunta para o humano antes de construir).
+
+A rotina declara a dúvida em `visoes.jsx`, e a tela lê a escolha com `useOpcao(id)`:
+
+```jsx
+// visoes.jsx
+{ id: 'estados-da-vitrine', visao: 'cardapio', rotulo: 'Estados da vitrine', telas: [...],
+  duvidas: [{ id: 'erro-da-vitrine', pergunta: 'Como aparece o erro?',
+              opcoes: { A: 'Aviso no topo', B: 'Tela inteira' } }] }
+
+// telas
+const opcaoDoErro = useOpcao('erro-da-vitrine');   // 'A' | 'B'
+return opcaoDoErro === 'A' ? <AvisoNoTopo /> : <ErroTelaInteira />;
+```
+
+- O painel ganha o grupo **Opção** com a pergunta e os botões `A · Aviso no topo` e
+  `B · Tela inteira`. Ele só aparece quando a aba (ou a rotina em contagem) tem dúvida, e
+  o resumo do painel mostra a opção ativa.
+- `&opcao=erro-da-vitrine:B` abre direto na opção (várias dúvidas separadas por vírgula).
+- A contagem de toques vale para a opção ativa; trocar a opção recomeça a rotina.
+  `window.contagemDeToques.opcoes` diz em que opção se contou.
+- Os prints saem de cada opção, em pastas `prints/<rotina>/opcao-<duvida>-<letra>/`.
+- **Escolhida a opção**, a perdedora sai do código, a dúvida sai de `visoes.jsx` e
+  `useOpcao` sai da tela, antes do merge. `useOpcao` de dúvida que não existe mais avisa no
+  console.
+
 ## Itens que seguem o padrão
 
 Quando a lista de telas do projeto marca um item como "segue o padrão" (de formulário, de
@@ -213,6 +244,7 @@ mostrando o estado ativo (`iOS · Escuro · loading · 2/3`), expandindo para:
 - **Tema** — Claro · Escuro
 - **Estado** — os 8 estados e o offline, aplicados à tela ativa
 - **Rotina** — inicia a contagem de toques de uma rotina da aba
+- **Opção** — só com dúvida A/B na aba: escolhe a opção de cada dúvida
 - **Reset** — volta à abertura da aba e limpa a rota
 
 Fecha com Esc (devolvendo o foco ao botão) e com clique fora.
@@ -241,7 +273,7 @@ livre.
 o showcase, e o boundary mostra o stack em vez de deixar em branco.
 
 **O endereço guarda a combinação.**
-`?visao=<id>&superficie=<chave>&tema=light|dark&estado=<estado>&modo=prototype|showcase&idioma=<locale>`
+`?visao=<id>&superficie=<chave>&tema=light|dark&estado=<estado>&modo=prototype|showcase&idioma=<locale>&opcao=<duvida>:<letra>`
 abre o protótipo exatamente naquela combinação, e `&print=1` esconde header e painel. É o
 que torna cada print reproduzível.
 
@@ -260,6 +292,8 @@ O script tira todos de uma vez, a partir de `visoes.jsx`:
 ```
 
 Os arquivos saem como `prints/<rotina>/<ordem>-<tela>--<superficie>--<tema>--<estado>.png`.
+Rotina com dúvida A/B tira a conferência inteira em cada opção, em
+`prints/<rotina>/opcao-<duvida>-<letra>/`.
 Abra os prints e confira cada um contra a checklist antes de mostrar ao humano. Os prints
 aprovados são commitados na branch da rotina e vão **num comentário da PR**, com link fixo
 ao commit (`https://github.com/<dono>/<repo>/blob/<sha>/<caminho>?raw=true`), para a

@@ -40,3 +40,15 @@ const visaoPorId = (idDaVisao) => VISOES.find((visao) => visao.id === idDaVisao)
 const rotinasDaVisao = (idDaVisao) => ROTINAS.filter((rotina) => rotina.visao === idDaVisao);
 
 const metaDaRotina = (rotina) => rotina.metaDeToques ?? META_DE_TOQUES;
+
+/* Dúvida de aparência em aberto (A/B). Quando uma tela da rotina tem dúvida real entre
+   duas formas, a rotina declara `duvidas` e a tela lê a escolha com useOpcao(id):
+
+     duvidas: [{ id: 'erro-da-vitrine', pergunta: 'Como aparece o erro?',
+                 opcoes: { A: 'Aviso no topo', B: 'Tela inteira' } }]
+
+   O painel troca a opção, os prints saem das duas e os toques se contam em cada uma.
+   Escolhida a opção, a perdedora e a dúvida saem do código antes do merge. */
+const duvidasDaRotina = (rotina) => rotina.duvidas || [];
+
+const duvidasDaVisao = (idDaVisao) => rotinasDaVisao(idDaVisao).flatMap(duvidasDaRotina);

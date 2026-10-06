@@ -61,6 +61,11 @@ Estado do painel flutuante, aplicado à tela ativa.
 - [ ] Cada rotina, percorrida pelo grupo Rotina do painel, chega à última tela dentro da
       meta (`window.contagemDeToques`); reporte `toques/meta` por rotina. Acima da meta é
       FAIL
+- [ ] Rotina com `duvidas` (A/B): cada opção chega à última tela dentro da meta,
+      contada com a opção escolhida no grupo Opção do painel; reporte `toques/meta` por
+      opção
+- [ ] Antes do merge, nenhuma `duvidas` em `visoes.jsx` e nenhum `useOpcao` nas telas:
+      a opção perdedora saiu. Dúvida que sobra no merge é FAIL
 - [ ] Aba com `letraMinima`: nenhum texto visível abaixo dela na escala 1:1
       (`getComputedStyle(...).fontSize`)
 
@@ -132,6 +137,7 @@ vazamento, não descuido de organização.
 - [ ] `prints/<rotina>/` tem o estado normal de cada tela em cada superfície da aba, nos
       dois temas
 - [ ] e vazio, erro, carregando e sem internet de cada tela na combinação de abertura
+- [ ] Rotina com dúvida A/B: o mesmo conjunto em cada opção (`opcao-<duvida>-<letra>/`)
 - [ ] Cada print foi aberto e olhado (não só contado)
 
 Como checar: compare os arquivos com `?listarPrints=<rotina>` do protótipo servido.

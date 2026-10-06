@@ -83,6 +83,10 @@ ordem (e `metaDeToques` só se for diferente da do projeto). A grade do Showcase
 prints saem daqui. Rotina de uma aba que ainda não existe ganha a aba em `VISOES`, com as
 superfícies e o tema de abertura dela.
 
+Dúvida real de aparência numa tela vira A/B: a rotina declara `duvidas` e a tela desenha
+as duas opções com `useOpcao(id)` (convenções, "Dúvidas A/B"). Escolhida a opção, apague a
+perdedora, a dúvida e o `useOpcao` antes do merge.
+
 ## Passo 5 — Registrar no index.html (onde tudo quebra)
 
 Duas edições, ambas obrigatórias:

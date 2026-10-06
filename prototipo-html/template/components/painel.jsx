@@ -5,6 +5,37 @@
 // Antes isto ocupava o header em barras de abas — que sumiam em viewport estreita
 // justamente quando o protótipo tinha telas demais para caber.
 
+/* ---------- Opções A/B ----------
+   A escolha de cada dúvida de visoes.jsx vive no shell e no endereço
+   (&opcao=erro-da-vitrine:B), para o print sair reproduzível. Sem escolha, vale a
+   primeira opção declarada. A tela lê com useOpcao(id) e desenha a opção. */
+const OpcoesContext = React.createContext({});
+
+const lerOpcoesDoEndereco = (textoDoParametro) => Object.fromEntries(
+  (textoDoParametro || '').split(',').filter(Boolean).map((parDuvidaOpcao) => parDuvidaOpcao.split(':')));
+
+const textoDasOpcoes = (opcoesEscolhidas) => Object.entries(opcoesEscolhidas)
+  .map(([idDaDuvida, letraDaOpcao]) => `${idDaDuvida}:${letraDaOpcao}`).join(',');
+
+const duvidaPorId = (idDaDuvida) => ROTINAS.flatMap(duvidasDaRotina).find((duvida) => duvida.id === idDaDuvida);
+
+const opcaoDaDuvida = (opcoesEscolhidas, duvida) => opcoesEscolhidas[duvida.id] || Object.keys(duvida.opcoes)[0];
+
+const useOpcao = (idDaDuvida) => {
+  const opcoesEscolhidas = React.useContext(OpcoesContext);
+  const duvida = duvidaPorId(idDaDuvida);
+  // Dúvida resolvida sai de visoes.jsx junto com a opção perdedora; useOpcao que sobra é resto.
+  if (!duvida) {
+    console.warn(`[Opção] a dúvida "${idDaDuvida}" não está em visoes.jsx`);
+    return 'A';
+  }
+  return opcaoDaDuvida(opcoesEscolhidas, duvida);
+};
+
+/* "Opção B" ou, com mais de uma dúvida, "Opção A·B". */
+const letrasDasOpcoes = (opcoesEscolhidas, duvidas) =>
+  duvidas.map((duvida) => opcaoDaDuvida(opcoesEscolhidas, duvida)).join('·');
+
 /* Os 8 estados de componente e o offline (sem internet), que é estado da tela. */
 const ESTADOS = ['default', 'hover', 'focus', 'active', 'disabled', 'loading', 'empty', 'error', 'offline'];
 
@@ -28,10 +59,14 @@ const PainelGrupo = ({ label, options, value, onChange }) => (
 
 /* "Ver um item: 2 de 3 toques · concluída". Acima da meta fica marcado em texto,
    não só em cor. */
-const textoDaContagem = (t, contagem) => {
+const textoDaContagem = (t, contagem, opcoesEscolhidas) => {
   if (!contagem) return '';
   const meta = metaDaRotina(contagem.rotina);
-  const partes = [`${contagem.rotina.rotulo}: ${t('rotinaToques', { toques: contagem.toques, meta })}`];
+  const duvidas = duvidasDaRotina(contagem.rotina);
+  const rotuloComOpcao = duvidas.length
+    ? `${contagem.rotina.rotulo} (${t('painelOpcao')} ${letrasDasOpcoes(opcoesEscolhidas, duvidas)})`
+    : contagem.rotina.rotulo;
+  const partes = [`${rotuloComOpcao}: ${t('rotinaToques', { toques: contagem.toques, meta })}`];
   if (contagem.concluida) partes.push(t('rotinaConcluida'));
   if (contagem.toques > meta) partes.push(t('rotinaAcimaDaMeta'));
   return partes.join(' · ');
@@ -44,6 +79,7 @@ const PainelControle = ({
   theme, setTheme,
   estado, setEstado,
   contagem, iniciarRotina,
+  opcoesEscolhidas, escolherOpcao,
   onReset,
 }) => {
   const t = useT(lang);
@@ -51,6 +87,8 @@ const PainelControle = ({
   const painelRef = React.useRef(null);
   const botaoRef = React.useRef(null);
   const rotinas = rotinasDaVisao(visao.id);
+  // Com uma rotina em contagem, só as dúvidas dela; sem, as da aba inteira.
+  const duvidas = contagem ? duvidasDaRotina(contagem.rotina) : duvidasDaVisao(visao.id);
 
   // Esc fecha e devolve o foco ao botão — sem isso a navegação por teclado fica presa.
   React.useEffect(() => {
@@ -70,7 +108,8 @@ const PainelControle = ({
   }, [aberto]);
 
   const resumoDaContagem = contagem ? ` · ${contagem.toques}/${metaDaRotina(contagem.rotina)}` : '';
-  const resumo = `${SURFACES[surface].label} · ${theme === 'light' ? t('temaClaro') : t('temaEscuro')} · ${estado}${resumoDaContagem}`;
+  const resumoDasOpcoes = duvidas.length ? ` · ${t('painelOpcao')} ${letrasDasOpcoes(opcoesEscolhidas, duvidas)}` : '';
+  const resumo = `${SURFACES[surface].label} · ${theme === 'light' ? t('temaClaro') : t('temaEscuro')} · ${estado}${resumoDasOpcoes}${resumoDaContagem}`;
 
   return (
     <div className="painel" ref={painelRef}>
@@ -113,11 +152,22 @@ const PainelControle = ({
                   className={`painel-contagem ${contagem.toques > metaDaRotina(contagem.rotina) ? 'acima' : ''}`}
                   aria-live="polite"
                 >
-                  {textoDaContagem(t, contagem)}
+                  {textoDaContagem(t, contagem, opcoesEscolhidas)}
                 </div>
               )}
             </div>
           )}
+          {duvidas.map((duvida) => (
+            <PainelGrupo
+              key={duvida.id}
+              label={`${t('painelOpcao')} · ${duvida.pergunta}`}
+              value={opcaoDaDuvida(opcoesEscolhidas, duvida)}
+              onChange={(letraDaOpcao) => escolherOpcao(duvida.id, letraDaOpcao)}
+              options={Object.entries(duvida.opcoes).map(([letraDaOpcao, rotuloDaOpcao]) => ({
+                value: letraDaOpcao, label: `${letraDaOpcao} · ${rotuloDaOpcao}`,
+              }))}
+            />
+          ))}
           <button className="painel-reset" onClick={onReset}>{t('painelReset')}</button>
         </div>
       )}
