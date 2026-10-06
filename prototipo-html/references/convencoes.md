@@ -291,6 +291,11 @@ O script tira todos de uma vez, a partir de `visoes.jsx`:
 ~/.claude/skills/prototipo-html/scripts/tirar-prints.sh http://localhost:8765 <id-da-rotina> <protótipo>/prints
 ```
 
+O script precisa do Node 22 ou mais novo e de um Chrome ou Chromium (`CHROME=<caminho>`
+escolhe outro). Ele abre o Chrome sem janela pelo protocolo de depuração, com a área de
+tela exata de cada combinação, e só fotografa quando a tela montou: o `--screenshot` do
+Chrome cortava e deslocava a moldura.
+
 Os arquivos saem como `prints/<rotina>/<ordem>-<tela>--<superficie>--<tema>--<estado>.png`.
 Rotina com dúvida A/B tira a conferência inteira em cada opção, em
 `prints/<rotina>/opcao-<duvida>-<letra>/`.
