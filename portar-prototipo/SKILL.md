@@ -18,6 +18,9 @@ nem do fato de o usuário ter pedido para portar.
 Sem aprovação, pare e peça. Em modo rigoroso, a aprovação é exact-match do termo que o
 projeto define (veja `~/.claude/skills/prototipo-html/references/deteccao-projeto.md`).
 
+Protótipo com dúvida A/B ainda aberta (`duvidas` em `visoes.jsx` ou `useOpcao` nas telas)
+não está aprovado: a escolha não foi feita ou a perdedora não saiu. Pare e peça.
+
 Rode `/auditar-prototipo` antes, se ainda não rodou. Portar protótipo com FAIL aberto
 significa reproduzir o defeito em código de produção, onde consertar custa dez vezes mais.
 

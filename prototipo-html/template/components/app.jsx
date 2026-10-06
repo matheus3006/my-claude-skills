@@ -4,6 +4,7 @@
 //
 // O endereço guarda a combinação em revisão, para cada print ser reproduzível:
 //   ?visao=<id>&superficie=<chave>&tema=light|dark&estado=<estado>&modo=prototype|showcase
+//   &opcao=<duvida>:<A|B>    abre a dúvida A/B na opção (várias separadas por vírgula)
 //   &print=1                 esconde header e painel (só a tela na moldura)
 //   &idioma=pt-BR            fixa o idioma (o navegador sem janela diz que é inglês)
 //   ?listarPrints=<rotina>   devolve a lista de prints da rotina (ou "todas") em JSON
@@ -61,8 +62,9 @@ class PrototypeErrorBoundary extends React.Component {
    vazio, erro, carregando e sem internet numa combinação só (a de abertura). */
 const ESTADOS_NUMA_COMBINACAO = ['empty', 'error', 'loading', 'offline'];
 
-const enderecoDaCombinacao = ({ visao, superficie, tema, estado, tela }) => {
+const enderecoDaCombinacao = ({ visao, superficie, tema, estado, tela, opcoesEscolhidas }) => {
   const parametros = new URLSearchParams({ visao, superficie, tema, estado, print: '1' });
+  if (Object.keys(opcoesEscolhidas).length) parametros.set('opcao', textoDasOpcoes(opcoesEscolhidas));
   return `?${parametros.toString()}${buildPath(tela.rota, tela.params || {})}`;
 };
 
@@ -72,23 +74,43 @@ const tamanhoDaJanelaDePrint = (superficie) => {
   return { largura: largura + folgaDaEscala, altura: altura + folgaDaEscala };
 };
 
+/* Rotina com dúvida A/B: a conferência inteira sai em cada opção. A primeira combinação
+   tem todas as dúvidas na primeira opção; as outras trocam uma dúvida por vez. Cada
+   combinação vai para uma pasta própria (opcao-<duvida>-<letra>). */
+const combinacoesDeOpcoes = (rotina) => {
+  const duvidas = duvidasDaRotina(rotina);
+  if (!duvidas.length) return [{}];
+  const opcoesIniciais = Object.fromEntries(duvidas.map((duvida) => [duvida.id, Object.keys(duvida.opcoes)[0]]));
+  const variacoes = duvidas.flatMap((duvida) => Object.keys(duvida.opcoes).slice(1)
+    .map((letraDaOpcao) => ({ ...opcoesIniciais, [duvida.id]: letraDaOpcao })));
+  return [opcoesIniciais, ...variacoes];
+};
+
+const pastaDasOpcoes = (opcoesEscolhidas) => {
+  const pares = Object.entries(opcoesEscolhidas);
+  if (!pares.length) return '';
+  return `opcao-${pares.map(([idDaDuvida, letraDaOpcao]) => `${idDaDuvida}-${letraDaOpcao}`).join('--')}/`;
+};
+
 const printsDaRotina = (rotina) => {
   const visao = visaoPorId(rotina.visao);
   const prints = [];
-  const registrar = (tela, indiceDaTela, superficie, tema, estado) => {
-    const ordem = String(indiceDaTela + 1).padStart(2, '0');
-    prints.push({
-      arquivo: `${rotina.id}/${ordem}-${tela.rota.toLowerCase()}--${superficie}--${tema}--${estado}.png`,
-      endereco: enderecoDaCombinacao({ visao: visao.id, superficie, tema, estado, tela }),
-      ...tamanhoDaJanelaDePrint(superficie),
-    });
-  };
-  rotina.telas.forEach((tela, indiceDaTela) => {
-    visao.superficies.forEach((superficie) => {
-      ['light', 'dark'].forEach((tema) => registrar(tela, indiceDaTela, superficie, tema, 'default'));
-    });
-    ESTADOS_NUMA_COMBINACAO.forEach((estado) => {
-      registrar(tela, indiceDaTela, visao.superficies[0], visao.temaPadrao || 'light', estado);
+  combinacoesDeOpcoes(rotina).forEach((opcoesEscolhidas) => {
+    const registrar = (tela, indiceDaTela, superficie, tema, estado) => {
+      const ordem = String(indiceDaTela + 1).padStart(2, '0');
+      prints.push({
+        arquivo: `${rotina.id}/${pastaDasOpcoes(opcoesEscolhidas)}${ordem}-${tela.rota.toLowerCase()}--${superficie}--${tema}--${estado}.png`,
+        endereco: enderecoDaCombinacao({ visao: visao.id, superficie, tema, estado, tela, opcoesEscolhidas }),
+        ...tamanhoDaJanelaDePrint(superficie),
+      });
+    };
+    rotina.telas.forEach((tela, indiceDaTela) => {
+      visao.superficies.forEach((superficie) => {
+        ['light', 'dark'].forEach((tema) => registrar(tela, indiceDaTela, superficie, tema, 'default'));
+      });
+      ESTADOS_NUMA_COMBINACAO.forEach((estado) => {
+        registrar(tela, indiceDaTela, visao.superficies[0], visao.temaPadrao || 'light', estado);
+      });
     });
   });
   return prints;
@@ -126,7 +148,7 @@ const QuadroDaGrade = ({ surface, rotulo, children }) => {
   );
 };
 
-const GradeDeTelas = ({ lang, estado, visao, surface }) => {
+const GradeDeTelas = ({ lang, estado, visao, surface, opcoesEscolhidas }) => {
   const t = useT(lang);
   return (
     <div className="showcase-grade">
@@ -134,6 +156,7 @@ const GradeDeTelas = ({ lang, estado, visao, surface }) => {
         <section key={rotina.id} className="grade-rotina">
           <div className="grade-rotina-titulo">
             {rotina.rotulo} · {t('rotinaMeta', { meta: metaDaRotina(rotina) })}
+            {duvidasDaRotina(rotina).length > 0 && ` · ${t('painelOpcao')} ${letrasDasOpcoes(opcoesEscolhidas, duvidasDaRotina(rotina))}`}
           </div>
           <div className="grade-rotina-telas">
             {rotina.telas.map((tela, indiceDaTela) => {
@@ -170,6 +193,7 @@ const ShowcaseConteudo = () => {
   const [estado, setEstado] = React.useState(PARAMETROS_DO_ENDERECO.get('estado') || DEFAULTS.estado);
   const [mode, setMode] = React.useState(PARAMETROS_DO_ENDERECO.get('modo') || DEFAULTS.mode);
   const [contagem, setContagem] = React.useState(null);
+  const [opcoesEscolhidas, setOpcoesEscolhidas] = React.useState(lerOpcoesDoEndereco(PARAMETROS_DO_ENDERECO.get('opcao')));
   const [conexaoVoltou, setConexaoVoltou] = React.useState(false);
   const estadoAnteriorRef = React.useRef(estado);
   const [bodyRef, bodySize] = useElementSize();
@@ -204,11 +228,13 @@ const ShowcaseConteudo = () => {
   React.useEffect(() => {
     window.contagemDeToques = contagem && {
       rotina: contagem.rotina.id,
+      opcoes: Object.fromEntries(duvidasDaRotina(contagem.rotina)
+        .map((duvida) => [duvida.id, opcaoDaDuvida(opcoesEscolhidas, duvida)])),
       toques: contagem.toques,
       meta: metaDaRotina(contagem.rotina),
       concluida: contagem.concluida,
     };
-  }, [contagem]);
+  }, [contagem, opcoesEscolhidas]);
 
   const iniciarRotina = (idDaRotina) => {
     const rotina = ROTINAS.find((rotinaDaLista) => rotinaDaLista.id === idDaRotina);
@@ -216,6 +242,12 @@ const ShowcaseConteudo = () => {
     const primeiraTela = rotina.telas[0];
     navigate(primeiraTela.rota, primeiraTela.params);
     setContagem({ rotina, toques: 0, concluida: false, aguardandoPrimeiraTela: true });
+  };
+
+  // Trocar a opção no meio da contagem recomeça a rotina: os toques valem para uma opção só.
+  const escolherOpcao = (idDaDuvida, letraDaOpcao) => {
+    setOpcoesEscolhidas((opcoesAnteriores) => ({ ...opcoesAnteriores, [idDaDuvida]: letraDaOpcao }));
+    if (contagem) iniciarRotina(contagem.rotina.id);
   };
 
   const registrarToque = (evento) => {
@@ -241,6 +273,7 @@ const ShowcaseConteudo = () => {
     setEstado(DEFAULTS.estado);
     setMode(DEFAULTS.mode);
     setContagem(null);
+    setOpcoesEscolhidas({});
     window.location.hash = '';
   };
 
@@ -256,66 +289,73 @@ const ShowcaseConteudo = () => {
   );
 
   if (modoPrint) {
-    return <main className="showcase-body showcase-body--print" ref={bodyRef}>{palco}</main>;
+    return (
+      <OpcoesContext.Provider value={opcoesEscolhidas}>
+        <main className="showcase-body showcase-body--print" ref={bodyRef}>{palco}</main>
+      </OpcoesContext.Provider>
+    );
   }
 
   return (
-    <div className="showcase-shell">
-      <header className="showcase-header">
-        <div className="showcase-brand">
-          <span>{t('appName')}</span>
-          <span className="accent">•</span>
-        </div>
+    <OpcoesContext.Provider value={opcoesEscolhidas}>
+      <div className="showcase-shell">
+        <header className="showcase-header">
+          <div className="showcase-brand">
+            <span>{t('appName')}</span>
+            <span className="accent">•</span>
+          </div>
 
-        {VISOES.length > 1 && (
-          <nav className="showcase-abas" aria-label={t('painelAbas')}>
-            {VISOES.map((visaoDaAba) => (
-              <button
-                key={visaoDaAba.id}
-                className={visaoDaAba.id === visao.id ? 'active' : ''}
-                onClick={() => trocarVisao(visaoDaAba.id)}
-                aria-pressed={visaoDaAba.id === visao.id}
-              >
-                {visaoDaAba.rotulo}
-              </button>
-            ))}
-          </nav>
-        )}
+          {VISOES.length > 1 && (
+            <nav className="showcase-abas" aria-label={t('painelAbas')}>
+              {VISOES.map((visaoDaAba) => (
+                <button
+                  key={visaoDaAba.id}
+                  className={visaoDaAba.id === visao.id ? 'active' : ''}
+                  onClick={() => trocarVisao(visaoDaAba.id)}
+                  aria-pressed={visaoDaAba.id === visao.id}
+                >
+                  {visaoDaAba.rotulo}
+                </button>
+              ))}
+            </nav>
+          )}
 
-        <div className="showcase-modo">
-          <button
-            className={mode === 'prototype' ? 'active' : ''}
-            onClick={() => setMode('prototype')}
-            aria-pressed={mode === 'prototype'}
-          >
-            {t('modoPrototipo')}
-          </button>
-          <button
-            className={mode === 'showcase' ? 'active' : ''}
-            onClick={() => setMode('showcase')}
-            aria-pressed={mode === 'showcase'}
-          >
-            {t('modoShowcase')}
-          </button>
-        </div>
-      </header>
+          <div className="showcase-modo">
+            <button
+              className={mode === 'prototype' ? 'active' : ''}
+              onClick={() => setMode('prototype')}
+              aria-pressed={mode === 'prototype'}
+            >
+              {t('modoPrototipo')}
+            </button>
+            <button
+              className={mode === 'showcase' ? 'active' : ''}
+              onClick={() => setMode('showcase')}
+              aria-pressed={mode === 'showcase'}
+            >
+              {t('modoShowcase')}
+            </button>
+          </div>
+        </header>
 
-      <main className={`showcase-body ${mode === 'showcase' ? 'showcase-body--grade' : ''}`} ref={bodyRef}>
-        {mode === 'prototype'
-          ? palco
-          : <GradeDeTelas lang={lang} estado={estado} visao={visao} surface={surface} />}
-      </main>
+        <main className={`showcase-body ${mode === 'showcase' ? 'showcase-body--grade' : ''}`} ref={bodyRef}>
+          {mode === 'prototype'
+            ? palco
+            : <GradeDeTelas lang={lang} estado={estado} visao={visao} surface={surface} opcoesEscolhidas={opcoesEscolhidas} />}
+        </main>
 
-      <PainelControle
-        lang={lang}
-        visao={visao}
-        surface={surface} setSurface={setSurface}
-        theme={theme} setTheme={setTheme}
-        estado={estado} setEstado={setEstado}
-        contagem={contagem} iniciarRotina={iniciarRotina}
-        onReset={resetar}
-      />
-    </div>
+        <PainelControle
+          lang={lang}
+          visao={visao}
+          surface={surface} setSurface={setSurface}
+          theme={theme} setTheme={setTheme}
+          estado={estado} setEstado={setEstado}
+          contagem={contagem} iniciarRotina={iniciarRotina}
+          opcoesEscolhidas={opcoesEscolhidas} escolherOpcao={escolherOpcao}
+          onReset={resetar}
+        />
+      </div>
+    </OpcoesContext.Provider>
   );
 };
 

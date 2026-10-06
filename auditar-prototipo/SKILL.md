@@ -78,7 +78,9 @@ superfície na grade (ex.: computador no meio das telas de iPhone) é FAIL. Aba 
 
 **Toques** — para cada rotina, escolha-a no grupo Rotina do painel e percorra o caminho
 principal tocando o mínimo possível, até a última tela. Leia `window.contagemDeToques` e
-reporte `toques/meta`. Acima da meta é FAIL.
+reporte `toques/meta`. Acima da meta é FAIL. Rotina com dúvida A/B se percorre em cada
+opção (grupo Opção do painel) e reporta `toques/meta` por opção. Depois da escolha do
+humano, sobrar `duvidas` em `visoes.jsx` ou `useOpcao` nas telas é FAIL.
 
 **Prints** — compare `prints/<rotina>/` com `?listarPrints=<rotina>` do protótipo
 servido. Print faltando é FAIL; abra uma amostra de cada superfície para confirmar que não
