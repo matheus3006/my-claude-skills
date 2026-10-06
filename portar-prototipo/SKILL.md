@@ -8,7 +8,7 @@ description: Traduz um protótipo HTML+JSX aprovado para a stack real do projeto
 Traduz o protótipo aprovado para a stack real. O protótipo é a fonte de verdade visual:
 onde a implementação divergir, é ela que está errada.
 
-**Leia primeiro:** `~/.claude/prototipo-html/references/convencoes.md`.
+**Leia primeiro:** `~/.claude/skills/prototipo-html/references/convencoes.md`.
 
 ## Passo 0 — Portão de aprovação
 
@@ -16,7 +16,7 @@ onde a implementação divergir, é ela que está errada.
 nem do fato de o usuário ter pedido para portar.
 
 Sem aprovação, pare e peça. Em modo rigoroso, a aprovação é exact-match do termo que o
-projeto define (veja `~/.claude/prototipo-html/references/deteccao-projeto.md`).
+projeto define (veja `~/.claude/skills/prototipo-html/references/deteccao-projeto.md`).
 
 Rode `/auditar-prototipo` antes, se ainda não rodou. Portar protótipo com FAIL aberto
 significa reproduzir o defeito em código de produção, onde consertar custa dez vezes mais.
@@ -32,10 +32,12 @@ Mais de uma stack no repo (mobile + web): confirme qual é o alvo antes de mapea
 
 Leia o protótipo inteiro e levante:
 
+- **Rotinas** — as de `visoes.jsx`: aba, telas em ordem, meta de toques e as superfícies
+  em que cada aba se confere (elas viram critério de aceite)
 - **Telas** — cada `components/<dominio>.jsx` e o que ele renderiza
 - **Primitivos** — o que está em `ui.jsx` e quem usa cada um
 - **Tokens** — a paleta completa dos dois temas, escalas de espaço, raio, sombra
-- **Estados** — quais dos 8 cada tela cobre
+- **Estados** — quais dos 8 e o offline cada tela cobre
 - **Strings** — as chaves de `i18n.jsx`
 - **Mocks** — o formato dos dados que as telas consomem (vira contrato de API/modelo)
 
@@ -73,7 +75,8 @@ Entregue antes de escrever código:
 3. **Reuso** — o que o projeto já tem e vai ser aproveitado
 4. **Gaps** — o que o protótipo mostra e a stack ainda não suporta (dependência,
    permissão, endpoint), com o custo de cada um
-5. **Critérios de aceite** — os 8 estados, os dois temas, acessibilidade equivalente
+5. **Critérios de aceite** — os 8 estados e o offline, os dois temas, cada superfície da
+   aba, a rotina dentro da meta de toques, acessibilidade equivalente
 6. **Fora de escopo** — o que fica para depois, explicitamente
 
 Em modo rigoroso, o plano vai para onde o protocolo do projeto manda e passa pela
@@ -85,7 +88,8 @@ Reproduza o protótipo. As invariantes atravessam a fronteira:
 
 - Tokens no arquivo central de tema; zero hex ou px mágico nos componentes
 - Strings no sistema de i18n da stack; nada hard-coded
-- Os 8 estados, incluindo empty, error e loading
+- Os 8 estados e o offline, incluindo empty, error e loading
+- As palavras da tela do glossário do projeto, como no protótipo
 - Acessibilidade: contraste AA nos dois temas, foco visível, ordem de tabulação, alvo de
   toque ≥ 44px
 - Sem PII em log — vale especialmente para telefone, e-mail e endereço que apareciam
@@ -101,8 +105,15 @@ Verificação é comparação, não impressão:
 1. Rode o que o projeto usa como gate (análise estática, testes, lint)
 2. Suba o protótipo com `/iniciar-prototipo`
 3. Rode o app real na mesma tela
-4. **Screenshot lado a lado**, nos dois temas — e **abra as imagens**
-5. Percorra os 8 estados dos dois lados
+4. **Conferência por print** do app real, com as mesmas combinações do protótipo (seção
+   do contrato): estado normal em cada superfície da aba, nos dois temas; vazio, erro,
+   carregando e sem internet numa combinação. Ponha cada print **lado a lado** com o
+   print aprovado em `prints/<rotina>/` — e **abra as imagens**
+5. Percorra a rotina no app real contando os toques; ela continua dentro da meta
+6. Os prints da implementação vão num comentário da PR, como os do protótipo
+
+**Itens que seguem o padrão** não têm protótipo próprio: confira-os do mesmo jeito, por
+print, contra a rotina aprovada que criou o padrão (o formulário, a tabela).
 
 Divergência achada: ou corrige a implementação, ou registra a diferença deliberada com
 o motivo. Divergência silenciosa é como o design drifta.
@@ -110,7 +121,7 @@ o motivo. Divergência silenciosa é como o design drifta.
 ## Passo 7 — Entregar
 
 - Tabela de mapeamento final (o que virou o quê)
-- Screenshots lado a lado
+- Prints lado a lado (protótipo × app real), com o link do comentário na PR
 - Divergências deliberadas e por quê
 - O que ficou fora de escopo
 - Resultado dos gates do projeto
@@ -119,9 +130,9 @@ Se o projeto mantém protótipo consolidado (vitrine), use `/sincronizar-prototi
 refletir a tela aprovada lá.
 
 **Se a implementação não cabe em uma sessão.** Pare depois do plano do Passo 4 e leve as duas
-tabelas de mapeamento para o `/to-prd`: elas viram a seção de decisões de implementação do PRD,
-que o `/to-issues` fatia em issues, cada uma construída por um `/implement` em sessão limpa.
-O protótipo continua sendo a referência visual de cada uma dessas sessões — Passo 6 (screenshot
+tabelas de mapeamento para o `/to-spec`: elas viram a seção de decisões de implementação da spec,
+que o `/to-tickets` fatia em issues, cada uma construída por um `/implement` em sessão limpa.
+O protótipo continua sendo a referência visual de cada uma dessas sessões — Passo 6 (prints
 lado a lado) vale por issue, não só no fim. Fluxo completo: [FLUXOS.md](https://github.com/matheus3006/my-claude-skills/blob/main/FLUXOS.md).
 
 ## Anti-padrões
@@ -131,6 +142,6 @@ lado a lado) vale por issue, não só no fim. Fluxo completo: [FLUXOS.md](https:
 - Espalhar hex pelos componentes em vez de alimentar o tema central
 - Criar componente novo na stack sem procurar o que já existe
 - Implementar tela antes de token e primitivo
-- Declarar paridade sem screenshot lado a lado
+- Declarar paridade sem print lado a lado em cada superfície
 - Julgar screenshot por tamanho ou hash de arquivo em vez de olhar
-- Deixar empty/error/loading para "depois" — nunca vem
+- Deixar empty/error/loading/offline para "depois" — nunca vem

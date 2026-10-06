@@ -8,7 +8,7 @@ description: Refina uma tela que já está no protótipo HTML+JSX — hierarquia
 Refina o que já existe no protótipo. Diagnóstico antes de proposta, proposta antes de
 edição.
 
-**Leia primeiro:** `~/.claude/prototipo-html/references/convencoes.md`.
+**Leia primeiro:** `~/.claude/skills/prototipo-html/references/convencoes.md`.
 
 Se o pedido for por um **valor exato** ("sobe um pouco", "mais espaço aqui", "logo
 maior") e você já errou o palpite uma ou duas vezes, pare: isso é
@@ -75,7 +75,8 @@ Só o que foi aprovado. Sempre:
 
 - Tokens via `var(--*)`; token novo entra nos **dois** temas
 - Strings via `i18n.jsx`, em todos os locales
-- Estados preservados — refino não pode apagar empty, error ou loading
+- Estados preservados — refino não pode apagar empty, error, loading ou offline
+- Rotina dentro da meta de toques — refino não pode somar toque à rotina da tela
 - **Bump do `?v=`** em todos os scripts
 
 ## Passo 6 — Verificar
@@ -90,7 +91,7 @@ Entregue o antes/depois lado a lado — é o que permite ao usuário julgar em u
 - Opinar sobre a tela sem ter lido o arquivo
 - Aplicar sem propor, quando o usuário só descreveu o incômodo
 - Mudar `ui.jsx` ou token sem dizer que outras telas vão junto
-- Refinar o visual e derrubar os estados empty/error/loading no caminho
+- Refinar o visual e derrubar os estados empty/error/loading/offline no caminho
 - Rodar todas as skills de design "por garantia" — ruído, não rigor
 - Ficar tentando adivinhar um valor numérico → é `/ajustar-detalhe-prototipo`
 - Esquecer o bump do `?v=` e revisar a versão antiga

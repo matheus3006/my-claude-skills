@@ -8,7 +8,7 @@ para checar objetivamente, não entra aqui.
 
 - [ ] `index.html` existe e `components/` existe
 - [ ] Ordem dos scripts respeita
-      `i18n → data → icons → ui → device → router → painel → <telas> → app`
+      `i18n → data → icons → ui → device → router → visoes → painel → <telas> → app`
 - [ ] Todo `<script>` de componente tem `?v=N`, todos com o mesmo N
 - [ ] `app.jsx` é o último script antes do bloco de render
 - [ ] Nenhum `import` ou `export` nos `.jsx`
@@ -31,7 +31,7 @@ dentro de SVG decorativo. Qualquer cor de superfície, texto, borda ou estado é
 Como checar: `grep -nE '#[0-9a-fA-F]{3,8}\b|rgba?\(' components/*.jsx`. Cada hit precisa
 de justificativa; o padrão é migrar para token.
 
-## 3. Os 8 estados
+## 3. Os 8 estados e o sem internet
 
 - [ ] **default** — dados típicos, não o caso mais favorável
 - [ ] **hover** — feedback visível em todo elemento clicável
@@ -40,19 +40,29 @@ de justificativa; o padrão é migrar para token.
 - [ ] **disabled** — opacidade reduzida + `cursor: not-allowed` + sem resposta a clique
 - [ ] **loading** — skeleton ou spinner, sem layout shift ao resolver
 - [ ] **empty** — ícone/ilustração + copy explicativo + CTA
-- [ ] **error** — mensagem clara + ação de recuperação
+- [ ] **error** — mensagem clara + ação de recuperação, sem perder o que foi digitado
+- [ ] **offline** — em toda tela: `AvisoSemInternet` diz o que continua funcionando e o
+      que espera; a ação que espera fica indisponível; a tela continua de pé por baixo;
+      sair do offline mostra o aviso de que a conexão voltou
 
 Estado só conta se der para **ver no showcase**, sem editar código — pelo seletor de
 Estado do painel flutuante, aplicado à tela ativa.
 
-Confira também as superfícies de cada visão: telas de App em iOS e Android; telas de Web
-em Desktop e Tablet. Conteúdo cortado ou scroll horizontal dentro da moldura é FAIL.
+## 3b. Abas, superfícies e rotinas
 
-- [ ] **Visão por plataforma** — na visão App, palco e grade do Showcase só têm telas de
-      App (moldura de celular); na visão Web, só telas de Web (moldura de navegador).
-      Tela de desktop misturada com tela de iPhone na mesma grade é FAIL.
-- [ ] Persona com mais de uma plataforma tem seletor de plataforma; o painel só oferece
-      as superfícies da plataforma ativa.
+- [ ] Cada aba de `visoes.jsx` existe no header e abre na primeira superfície dela, no
+      `temaPadrao` dela
+- [ ] O painel oferece só as superfícies da aba ativa
+- [ ] Cada tela da aba renderiza em cada superfície dela, sem conteúdo cortado nem scroll
+      horizontal dentro da moldura
+- [ ] **Uma moldura por vez** — palco e grade mostram só a superfície ativa; tela de
+      computador no meio das telas de iPhone é FAIL
+- [ ] Toda rota de `SCREEN_MAP` aparece em pelo menos uma rotina de `ROTINAS`
+- [ ] Cada rotina, percorrida pelo grupo Rotina do painel, chega à última tela dentro da
+      meta (`window.contagemDeToques`); reporte `toques/meta` por rotina. Acima da meta é
+      FAIL
+- [ ] Aba com `letraMinima`: nenhum texto visível abaixo dela na escala 1:1
+      (`getComputedStyle(...).fontSize`)
 
 ## 4. Acessibilidade
 
@@ -78,6 +88,15 @@ entre os temas.
 Como checar chave órfã: extrair os `t('...')` dos componentes e conferir contra as
 chaves de `TRANSLATIONS`. Falta em um locale só aparece ao trocar o idioma — por isso
 entra no checklist e não na inspeção visual.
+
+## 5b. Linguagem
+
+- [ ] Nenhuma string do `i18n.jsx` usa termo da lista _Avoid_ do glossário do projeto
+- [ ] Nenhuma sigla solta nem palavra em inglês na tela (o showcase em si não conta)
+
+Como checar: extraia os termos _Avoid_ do glossário e procure cada um, sem diferenciar
+maiúsculas, nos valores do locale principal de `TRANSLATIONS`. Sem glossário, marque SKIP
+dizendo que o projeto não tem um.
 
 ## 6. Runtime
 
@@ -108,11 +127,20 @@ step). Marcá-lo como FAIL é falso positivo. Qualquer outra mensagem conta.
 Este item é bloqueante. Protótipo costuma virar link compartilhado; PII real ali é
 vazamento, não descuido de organização.
 
-## 8. Pronto para aprovar
+## 8. Conferência por print
 
-- [ ] Todas as telas do escopo estão no showcase
-- [ ] Os 8 estados marcados
-- [ ] Seções 1–7 sem falha aberta
+- [ ] `prints/<rotina>/` tem o estado normal de cada tela em cada superfície da aba, nos
+      dois temas
+- [ ] e vazio, erro, carregando e sem internet de cada tela na combinação de abertura
+- [ ] Cada print foi aberto e olhado (não só contado)
+
+Como checar: compare os arquivos com `?listarPrints=<rotina>` do protótipo servido.
+
+## 9. Pronto para aprovar
+
+- [ ] Todas as rotinas do escopo estão no showcase, com as telas em ordem
+- [ ] Os 8 estados e o sem internet marcados
+- [ ] Seções 1–8 sem falha aberta
 - [ ] Servindo sem erro no console
 - [ ] Aprovação explícita do usuário registrada
 

@@ -216,6 +216,47 @@ const ErrorState = ({ title, body, cta, onCta }) => (
   </div>
 );
 
+/* ---------- Sem internet ----------
+   Avisa na hora que a conexão caiu, diz o que continua funcionando e o que espera.
+   A tela continua de pé por baixo: sem internet não é tela de erro. */
+const AvisoSemInternet = ({ titulo, continuaFuncionando, espera }) => (
+  <div
+    role="status"
+    style={{
+      display: 'flex', gap: 'var(--space-3)', alignItems: 'flex-start',
+      padding: 'var(--space-3) var(--space-4)',
+      background: 'var(--warn-soft)', color: 'var(--fg)',
+      border: '1px solid var(--warn)', borderRadius: 'var(--radius-md)',
+    }}
+  >
+    <IconWifiOff size={20} style={{ color: 'var(--warn)', flexShrink: 0, marginTop: 2 }} />
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-1)' }}>
+      <div style={{ fontSize: 14, fontWeight: 800 }}>{titulo}</div>
+      {continuaFuncionando && <div style={{ fontSize: 13 }}>{continuaFuncionando}</div>}
+      {espera && <div style={{ fontSize: 13, color: 'var(--muted)' }}>{espera}</div>}
+    </div>
+  </div>
+);
+
+/* Aviso curto de que a conexão voltou. O Showcase mostra sozinho ao sair do
+   estado offline; a tela não precisa cuidar disso. */
+const AvisoConexaoVoltou = ({ texto }) => (
+  <div
+    role="status"
+    style={{
+      position: 'absolute', left: 'var(--space-4)', right: 'var(--space-4)', bottom: 'var(--space-5)',
+      display: 'flex', gap: 'var(--space-2)', alignItems: 'center',
+      padding: 'var(--space-3) var(--space-4)',
+      background: 'var(--toast-bg)', color: 'var(--toast-fg)',
+      borderRadius: 'var(--radius-md)', boxShadow: 'var(--shadow-lg)',
+      fontSize: 13, fontWeight: 700, zIndex: 60, animation: 'fadeIn 160ms ease',
+    }}
+  >
+    <IconWifi size={18} />
+    <span>{texto}</span>
+  </div>
+);
+
 /* ---------- Animation keyframes injection ---------- */
 const styleId = '__prototype_keyframes__';
 if (!document.getElementById(styleId)) {

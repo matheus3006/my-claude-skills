@@ -1,6 +1,6 @@
 ---
 name: sincronizar-prototipo
-description: Reflete uma tela já aprovada no protótipo consolidado (vitrine) para evitar drift, faz o bump do cache-bust em todos os scripts e revalida a ordem de carregamento do index.html. Use no fechamento de uma tela, quando o usuário falar em sincronizar, consolidar, refletir na vitrine, atualizar o protótipo principal, ou quando a vitrine estiver defasada em relação ao que foi implementado. NÃO use para adicionar tela inédita a um protótipo (integrar-ao-prototipo) nem para portar para a stack real (portar-prototipo).
+description: Reflete uma rotina ou tela já aprovada no protótipo consolidado (vitrine) para evitar drift, faz o bump do cache-bust em todos os scripts e revalida a ordem de carregamento do index.html. Use no fechamento de uma tela, quando o usuário falar em sincronizar, consolidar, refletir na vitrine, atualizar o protótipo principal, ou quando a vitrine estiver defasada em relação ao que foi implementado. NÃO use para adicionar tela inédita a um protótipo (integrar-ao-prototipo) nem para portar para a stack real (portar-prototipo).
 ---
 
 # sincronizar-prototipo
@@ -8,7 +8,7 @@ description: Reflete uma tela já aprovada no protótipo consolidado (vitrine) p
 Mantém o protótipo consolidado — a vitrine que alguém abre para ver o produto — igual ao
 que foi de fato aprovado e implementado.
 
-**Leia primeiro:** `~/.claude/prototipo-html/references/convencoes.md`.
+**Leia primeiro:** `~/.claude/skills/prototipo-html/references/convencoes.md`.
 
 Vitrine desatualizada é pior que vitrine inexistente: ela mostra com confiança um produto
 que não existe mais. Como costuma ser a primeira coisa que o dono do produto abre, o
@@ -19,6 +19,11 @@ drift aqui custa credibilidade, não só organização.
 - **Origem** — o protótipo da tela aprovada, ou a implementação na stack real quando ela
   já avançou além do protótipo
 - **Destino** — o protótipo consolidado do projeto (o que agrega várias telas)
+
+Com protótipo único (seção do contrato), origem e destino são o mesmo protótipo em dois
+momentos: a branch da rotina, onde ela foi feita e aprovada, e a base para onde a branch
+volta (a `main`, em geral). Sincronizar aqui é garantir que a rotina chega à base inteira,
+na aba certa, sem desfazer o que outras rotinas trouxeram para a base nesse meio-tempo.
 
 Não há consolidado? Pergunte se é para criar um, e qual protótipo vira a base. Não eleja
 uma vitrine por conta própria.
@@ -33,7 +38,9 @@ Compare origem e destino antes de tocar em qualquer coisa:
 - Tokens divergiram? (paleta, espaçamento, raio)
 - Primitivos do `ui.jsx` divergiram entre os dois?
 - Strings mudaram?
-- Estados que existem na origem e faltam no destino?
+- Estados que existem na origem e faltam no destino (incluindo o offline)?
+- A rotina em `visoes.jsx` — aba, telas em ordem, meta — é a mesma nos dois lados? As
+  abas e superfícies de `VISOES` divergiram?
 
 Reporte a diferença **antes** de sincronizar. Às vezes a resposta certa é atualizar a
 origem, não o destino — quando a vitrine já tinha a decisão mais recente.
@@ -44,7 +51,8 @@ origem, não o destino — quando a vitrine já tinha a decisão mais recente.
 como tab separada e deixar a versão velha no lugar de sempre: agora a vitrine mostra as
 duas, e quem olha não sabe qual vale.
 
-A tela nova ocupa o lugar da antiga, no fluxo em que ela vive.
+A tela nova ocupa o lugar da antiga, na rotina em que ela vive: a entrada em `ROTINAS`
+aponta para a tela nova, e a versão velha sai do `SCREEN_MAP` e do `index.html`.
 
 Aplicando:
 
@@ -52,14 +60,16 @@ Aplicando:
   vence e diga qual** — não deixe os dois
 - Strings para o `i18n.jsx` do consolidado, em todos os locales
 - Token novo entra nos **dois** temas
-- Preserve os 8 estados
+- Preserve os 8 estados e o offline
+- `visoes.jsx` do consolidado recebe a rotina e a aba dela; abas e rotinas de outras
+  rotinas ficam como estão
 
 ## Passo 4 — Revalidar o index.html
 
 Duas coisas, sempre:
 
-**a) Ordem de carregamento** — `i18n → data → icons → ui → <telas> → app`. Arquivo novo
-entra depois de `ui.jsx` e antes de `app.jsx`. Fora de ordem dá `X is not defined` em
+**a) Ordem de carregamento** — `i18n → data → icons → ui → device → router → visoes →
+painel → <telas> → app`. Tela nova entra depois de `painel.jsx` e antes de `app.jsx`. Fora de ordem dá `X is not defined` em
 runtime, com tela em branco e sem erro de sintaxe.
 
 **b) Bump do `?v=`** em **todos** os scripts, para o mesmo número. Este é o passo mais
@@ -70,7 +80,8 @@ esquecido da sincronização e o que faz o usuário abrir a vitrine e jurar que 
 Suba com `/iniciar-prototipo` e, pelo preview MCP:
 
 - Console limpo, sem 404 em `components/*.jsx`
-- A tela sincronizada renderiza nos dois temas
+- A tela sincronizada renderiza nos dois temas, em cada superfície da aba dela
+- Cada rotina tocada continua dentro da meta de toques (grupo Rotina do painel)
 - **As outras telas da vitrine continuam de pé** — o risco real aqui é regressão em tela
   que ninguém pediu para mexer
 - Screenshot da tela sincronizada

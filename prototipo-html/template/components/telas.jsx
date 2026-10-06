@@ -1,7 +1,8 @@
 // Protótipo — Telas de exemplo.
 // TEMPLATE: substitua por components/<dominio>.jsx com as telas reais.
 // O que importa preservar: cada tela recebe `estado` e responde aos 8 estados
-// visuais, e a navegação usa useRouter() em vez de trocar aba.
+// visuais e ao offline (sem internet), e a navegação usa useRouter() em vez de
+// trocar aba. A tela é um passo de uma rotina declarada em visoes.jsx.
 
 const TelaHome = ({ lang, estado }) => {
   const t = useT(lang);
@@ -35,9 +36,17 @@ const TelaHome = ({ lang, estado }) => {
   }
 
   const disabled = estado === 'disabled';
+  const semInternet = estado === 'offline';
 
   return (
     <TelaShell titulo={t('homeTitulo')}>
+      {semInternet && (
+        <AvisoSemInternet
+          titulo={t('semInternetTitulo')}
+          continuaFuncionando={t('homeContinua')}
+          espera={t('homeEspera')}
+        />
+      )}
       <div style={{ fontSize: 13, color: 'var(--muted)', marginBottom: 'var(--space-2)' }}>
         {t('homeSubtitulo')}
       </div>
@@ -61,7 +70,7 @@ const TelaHome = ({ lang, estado }) => {
         </Press>
       ))}
 
-      <Button variant="primary" disabled={disabled}>{t('ctaPrimary')}</Button>
+      <Button variant="primary" disabled={disabled || semInternet}>{t('ctaPrimary')}</Button>
     </TelaShell>
   );
 };
@@ -69,7 +78,7 @@ const TelaHome = ({ lang, estado }) => {
 const TelaDetalhe = ({ lang, estado, params }) => {
   const t = useT(lang);
   const { navigate } = useRouter();
-  const item = MOCK_ITEMS.find((i) => String(i.id) === String(params.id)) || MOCK_ITEMS[0];
+  const item = MOCK_ITEMS.find((itemMock) => String(itemMock.id) === String(params.id)) || MOCK_ITEMS[0];
 
   if (estado === 'loading') {
     return (
@@ -90,13 +99,21 @@ const TelaDetalhe = ({ lang, estado, params }) => {
   }
 
   const disabled = estado === 'disabled';
+  const semInternet = estado === 'offline';
 
   return (
     <TelaShell titulo={t('detalheTitulo')} onVoltar={() => navigate('HOME')}>
+      {semInternet && (
+        <AvisoSemInternet
+          titulo={t('semInternetTitulo')}
+          continuaFuncionando={t('homeContinua')}
+          espera={t('homeEspera')}
+        />
+      )}
       <div style={{ fontSize: 20, fontWeight: 800 }}>{item.label}</div>
       <div style={{ fontSize: 13, color: 'var(--muted)' }}>{t('detalheDescricao')}</div>
       <Field label="Email" value={MOCK_USER.email} onChange={() => {}} disabled={disabled} />
-      <Button variant="primary" disabled={disabled}>{t('ctaPrimary')}</Button>
+      <Button variant="primary" disabled={disabled || semInternet}>{t('ctaPrimary')}</Button>
     </TelaShell>
   );
 };

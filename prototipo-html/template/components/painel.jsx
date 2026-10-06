@@ -1,60 +1,76 @@
 // Protótipo — Painel de controle flutuante do showcase.
 //
-// Todo controle de revisão vive aqui: superfície, tema, estado e reset. O header
-// fica só com a marca e o modo, e o device frame ganha a tela inteira.
+// Todo controle de revisão vive aqui: superfície, tema, estado, rotina e reset. O
+// header fica só com a marca, as abas e o modo, e o device frame ganha a tela inteira.
 // Antes isto ocupava o header em barras de abas — que sumiam em viewport estreita
 // justamente quando o protótipo tinha telas demais para caber.
 
-const ESTADOS = ['default', 'hover', 'focus', 'active', 'disabled', 'loading', 'empty', 'error'];
+/* Os 8 estados de componente e o offline (sem internet), que é estado da tela. */
+const ESTADOS = ['default', 'hover', 'focus', 'active', 'disabled', 'loading', 'empty', 'error', 'offline'];
 
 const PainelGrupo = ({ label, options, value, onChange }) => (
   <div className="painel-grupo">
     <div className="painel-grupo-label">{label}</div>
     <div className="painel-opcoes">
-      {options.map((opt) => (
+      {options.map((opcao) => (
         <button
-          key={opt.value}
-          className={value === opt.value ? 'active' : ''}
-          onClick={() => onChange(opt.value)}
-          aria-pressed={value === opt.value}
+          key={opcao.value}
+          className={value === opcao.value ? 'active' : ''}
+          onClick={() => onChange(opcao.value)}
+          aria-pressed={value === opcao.value}
         >
-          {opt.label}
+          {opcao.label}
         </button>
       ))}
     </div>
   </div>
 );
 
+/* "Ver um item: 2 de 3 toques · concluída". Acima da meta fica marcado em texto,
+   não só em cor. */
+const textoDaContagem = (t, contagem) => {
+  if (!contagem) return '';
+  const meta = metaDaRotina(contagem.rotina);
+  const partes = [`${contagem.rotina.rotulo}: ${t('rotinaToques', { toques: contagem.toques, meta })}`];
+  if (contagem.concluida) partes.push(t('rotinaConcluida'));
+  if (contagem.toques > meta) partes.push(t('rotinaAcimaDaMeta'));
+  return partes.join(' · ');
+};
+
 const PainelControle = ({
   lang,
+  visao,
   surface, setSurface,
   theme, setTheme,
   estado, setEstado,
+  contagem, iniciarRotina,
   onReset,
 }) => {
   const t = useT(lang);
   const [aberto, setAberto] = React.useState(false);
   const painelRef = React.useRef(null);
   const botaoRef = React.useRef(null);
+  const rotinas = rotinasDaVisao(visao.id);
 
   // Esc fecha e devolve o foco ao botão — sem isso a navegação por teclado fica presa.
   React.useEffect(() => {
     if (!aberto) return;
-    const onKey = (e) => {
-      if (e.key === 'Escape') { setAberto(false); botaoRef.current?.focus(); }
+    const aoTeclar = (evento) => {
+      if (evento.key === 'Escape') { setAberto(false); botaoRef.current?.focus(); }
     };
-    const onClickFora = (e) => {
-      if (painelRef.current && !painelRef.current.contains(e.target)) setAberto(false);
+    const aoClicarFora = (evento) => {
+      if (painelRef.current && !painelRef.current.contains(evento.target)) setAberto(false);
     };
-    document.addEventListener('keydown', onKey);
-    document.addEventListener('mousedown', onClickFora);
+    document.addEventListener('keydown', aoTeclar);
+    document.addEventListener('mousedown', aoClicarFora);
     return () => {
-      document.removeEventListener('keydown', onKey);
-      document.removeEventListener('mousedown', onClickFora);
+      document.removeEventListener('keydown', aoTeclar);
+      document.removeEventListener('mousedown', aoClicarFora);
     };
   }, [aberto]);
 
-  const resumo = `${SURFACES[surface].label} · ${theme === 'light' ? t('temaClaro') : t('temaEscuro')} · ${estado}`;
+  const resumoDaContagem = contagem ? ` · ${contagem.toques}/${metaDaRotina(contagem.rotina)}` : '';
+  const resumo = `${SURFACES[surface].label} · ${theme === 'light' ? t('temaClaro') : t('temaEscuro')} · ${estado}${resumoDaContagem}`;
 
   return (
     <div className="painel" ref={painelRef}>
@@ -64,7 +80,7 @@ const PainelControle = ({
             label={t('painelSuperficie')}
             value={surface}
             onChange={setSurface}
-            options={SURFACE_ORDER.map((k) => ({ value: k, label: SURFACES[k].label }))}
+            options={visao.superficies.map((chave) => ({ value: chave, label: SURFACES[chave].label }))}
           />
           <PainelGrupo
             label={t('painelTema')}
@@ -79,8 +95,29 @@ const PainelControle = ({
             label={t('painelEstado')}
             value={estado}
             onChange={setEstado}
-            options={ESTADOS.map((s) => ({ value: s, label: s }))}
+            options={ESTADOS.map((nomeDoEstado) => ({ value: nomeDoEstado, label: nomeDoEstado }))}
           />
+          {rotinas.length > 0 && (
+            <div className="painel-grupo">
+              <PainelGrupo
+                label={t('painelRotina')}
+                value={contagem ? contagem.rotina.id : ''}
+                onChange={(idDaRotina) => iniciarRotina(idDaRotina || null)}
+                options={[
+                  { value: '', label: t('rotinaNenhuma') },
+                  ...rotinas.map((rotina) => ({ value: rotina.id, label: rotina.rotulo })),
+                ]}
+              />
+              {contagem && (
+                <div
+                  className={`painel-contagem ${contagem.toques > metaDaRotina(contagem.rotina) ? 'acima' : ''}`}
+                  aria-live="polite"
+                >
+                  {textoDaContagem(t, contagem)}
+                </div>
+              )}
+            </div>
+          )}
           <button className="painel-reset" onClick={onReset}>{t('painelReset')}</button>
         </div>
       )}
@@ -88,7 +125,7 @@ const PainelControle = ({
       <button
         ref={botaoRef}
         className="painel-toggle"
-        onClick={() => setAberto((v) => !v)}
+        onClick={() => setAberto((estaAberto) => !estaAberto)}
         aria-expanded={aberto}
         aria-label={t('painelTitulo')}
       >

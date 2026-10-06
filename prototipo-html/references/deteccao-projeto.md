@@ -1,18 +1,26 @@
 # Detecção de projeto
 
 As skills `*-prototipo` rodam em qualquer projeto da máquina. Antes de agir, detecte
-três coisas: onde ficam os protótipos, qual o modo de rigor e qual a stack de destino.
+onde ficam os protótipos, qual o modo de rigor, qual a stack de destino, a identidade
+visual e o glossário.
 
 ## 1. Raiz de protótipos
 
 Ordem de precedência:
 
+0. O projeto declara raiz e nome (no `AGENTS.md`, em `docs/`, no ticket ou no mapa que
+   pediu o protótipo, ex.: "protótipo único em `prototipos/appetito-v2/`") → usa exatamente
+   esse caminho, mesmo que a pasta ainda não exista
 1. Já existe `prototipos_html/` → usa
 2. Existe outra raiz com o padrão (`prototypes/`, `prototipos/`, `mockups/` contendo
    `index.html` + `components/*.jsx`) → usa a que existe
 3. Nada existe → cria `prototipos_html/`
 
 **Nunca crie uma segunda raiz.** Duas convenções no mesmo repo é como o padrão morre.
+
+Sem nome declarado, o protótipo se chama `YYYY-MM-DD-<slug>`. Protótipo único (veja
+`convencoes.md`) usa o nome declarado pelo projeto, sem data: ele vive enquanto o produto
+viver.
 
 Se houver ambiguidade real (duas raízes candidatas), pergunte em vez de escolher.
 
@@ -50,6 +58,9 @@ Sem protocolo de controle. O fluxo é:
 Sem `controle/`, sem ledger, sem cerimônia. A aprovação do protótipo continua sendo
 obrigatória — é ela que separa protótipo de código de produção.
 
+Em qualquer modo, um `AGENTS.md` presente vale por inteiro: branch, issue ativa, quem
+aprova e como se registra a aprovação são do projeto.
+
 ## 3. Stack de destino
 
 Detectada por arquivo-marcador na raiz. Importa para `/portar-prototipo` e para as
@@ -84,7 +95,20 @@ Achou? Reaproveite os valores reais — protótipo com cor inventada valida a te
 Não achou? Use a paleta neutra do template e sinalize ao usuário que os tokens de marca
 são placeholder, para ele confirmar ou substituir.
 
-## 5. Resumo da detecção
+## 5. Glossário e lista de telas
+
+O glossário dá as palavras da tela. Procure, nesta ordem: `CONTEXT.md`, `GLOSSARY.md`,
+`UBIQUITOUS_LANGUAGE.md`, um glossário em `docs/`. Leia o termo de cada coisa que a tela
+mostra e a lista _Avoid_ de cada termo — essas palavras ficam fora da tela.
+
+Se o projeto tem uma lista de telas a prototipar (rotinas, ordem, "nasce em", itens que
+"seguem o padrão"), ela diz quais rotinas existem, em que superfícies cada uma se confere
+e quais itens não ganham protótipo. Ela alimenta o `visoes.jsx`.
+
+Sem glossário: use as palavras de quem usa a tela, em português claro, e diga ao usuário
+que não havia glossário.
+
+## 6. Resumo da detecção
 
 Ao iniciar, reporte o que foi detectado em duas ou três linhas, antes de agir:
 
@@ -93,6 +117,7 @@ Raiz: prototipos_html/ (existente)
 Modo: rigoroso — AGENTS.md + controle/ presentes
 Stack: Flutter (pubspec.yaml) + Next.js (next.config.ts)
 Tokens: encontrados em tailwind.config.ts
+Glossário: CONTEXT.md · Lista de telas: docs/telas-a-prototipar.md
 ```
 
 Se algo veio de suposição e não de evidência, diga qual e por quê. O usuário corrige

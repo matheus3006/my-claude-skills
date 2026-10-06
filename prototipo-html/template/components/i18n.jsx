@@ -16,6 +16,14 @@ const TRANSLATIONS = {
     painelTema: 'Tema',
     painelEstado: 'Estado',
     painelReset: 'Resetar',
+    painelAbas: 'Abas do protótipo',
+    painelRotina: 'Rotina',
+    rotinaNenhuma: 'Nenhuma',
+    rotinaToques: '{toques} de {meta} toques',
+    rotinaConcluida: 'concluída',
+    rotinaMeta: 'meta de {meta} toques',
+    rotinaAcimaDaMeta: 'acima da meta',
+    conexaoVoltou: 'A conexão voltou. O que estava esperando já foi enviado.',
     temaClaro: 'Claro',
     temaEscuro: 'Escuro',
 
@@ -33,6 +41,9 @@ const TRANSLATIONS = {
     errorTitle: 'Algo deu errado',
     errorBody: 'Não foi possível concluir a operação. Tente novamente.',
     errorCta: 'Tentar de novo',
+    semInternetTitulo: 'Sem internet',
+    homeContinua: 'Você continua vendo os itens.',
+    homeEspera: 'A ação principal espera a conexão voltar.',
   },
 
   'en': {
@@ -46,6 +57,14 @@ const TRANSLATIONS = {
     painelTema: 'Theme',
     painelEstado: 'State',
     painelReset: 'Reset',
+    painelAbas: 'Prototype tabs',
+    painelRotina: 'Routine',
+    rotinaNenhuma: 'None',
+    rotinaToques: '{toques} of {meta} taps',
+    rotinaConcluida: 'done',
+    rotinaMeta: 'goal of {meta} taps',
+    rotinaAcimaDaMeta: 'over the goal',
+    conexaoVoltou: 'You are back online. Everything that was waiting has been sent.',
     temaClaro: 'Light',
     temaEscuro: 'Dark',
 
@@ -62,6 +81,9 @@ const TRANSLATIONS = {
     errorTitle: 'Something went wrong',
     errorBody: 'We could not complete the operation. Please try again.',
     errorCta: 'Retry',
+    semInternetTitulo: 'No internet',
+    homeContinua: 'You can still see the items.',
+    homeEspera: 'The primary action waits until you are back online.',
   },
 
   'es': {
@@ -75,6 +97,14 @@ const TRANSLATIONS = {
     painelTema: 'Tema',
     painelEstado: 'Estado',
     painelReset: 'Reiniciar',
+    painelAbas: 'Pestañas del prototipo',
+    painelRotina: 'Rutina',
+    rotinaNenhuma: 'Ninguna',
+    rotinaToques: '{toques} de {meta} toques',
+    rotinaConcluida: 'completada',
+    rotinaMeta: 'meta de {meta} toques',
+    rotinaAcimaDaMeta: 'por encima de la meta',
+    conexaoVoltou: 'La conexión volvió. Lo que estaba esperando ya se envió.',
     temaClaro: 'Claro',
     temaEscuro: 'Oscuro',
 
@@ -91,5 +121,8 @@ const TRANSLATIONS = {
     errorTitle: 'Algo salió mal',
     errorBody: 'No pudimos completar la operación. Intenta de nuevo.',
     errorCta: 'Reintentar',
+    semInternetTitulo: 'Sin internet',
+    homeContinua: 'Sigues viendo los elementos.',
+    homeEspera: 'La acción principal espera a que vuelva la conexión.',
   },
 };

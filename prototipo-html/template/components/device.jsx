@@ -1,15 +1,22 @@
 // Protótipo — Superfícies de visualização (device frames).
-// Toda superfície está sempre disponível, inclusive em projeto web: ver como a
-// tela se comporta no celular é parte da revisão, não exclusividade de app nativo.
+// Cada aba (visão) liga só as superfícies dela, em visoes.jsx. Aqui ficam todas as
+// que o padrão sabe desenhar: celular (iOS e Android), tablet em pé e deitado,
+// computador, TV e totem.
 
 const SURFACES = {
-  desktop: { label: 'Desktop', width: null, height: null, kind: 'free' },
-  tablet:  { label: 'Tablet',  width: 834, height: 1112, kind: 'tablet' },
-  ios:     { label: 'iOS',     width: 390, height: 800,  kind: 'phone' },
-  android: { label: 'Android', width: 390, height: 800,  kind: 'phone' },
+  desktop:       { label: 'Computador',     width: null, height: null, kind: 'free' },
+  tablet:        { label: 'Tablet',         width: 834,  height: 1112, kind: 'tablet', moldura: 12 },
+  tabletDeitado: { label: 'Tablet deitado', width: 1112, height: 834,  kind: 'tablet', moldura: 12 },
+  ios:           { label: 'iOS',            width: 390,  height: 800,  kind: 'phone',  moldura: 9 },
+  android:       { label: 'Android',        width: 390,  height: 800,  kind: 'phone',  moldura: 3 },
+  tv:            { label: 'TV',             width: 1920, height: 1080, kind: 'tv',     moldura: 14 },
+  totem:         { label: 'Totem',          width: 1080, height: 1920, kind: 'totem',  moldura: 28 },
 };
 
-const SURFACE_ORDER = ['desktop', 'tablet', 'ios', 'android'];
+const SURFACE_ORDER = ['desktop', 'tablet', 'tabletDeitado', 'ios', 'android', 'tv', 'totem'];
+
+/* Tamanho do computador quando precisa de medida fixa (grade e prints). */
+const DESKTOP_REFERENCIA = { width: 1440, height: 900 };
 
 /* ---------- iOS: dynamic island + home indicator ---------- */
 const IosFrame = ({ theme, children }) => {
@@ -94,14 +101,14 @@ const AndroidFrame = ({ theme, children }) => {
   );
 };
 
-/* ---------- Tablet: moldura sóbria, sem chrome de SO ---------- */
-const TabletFrame = ({ children }) => {
-  const { width: W, height: H } = SURFACES.tablet;
+/* ---------- Tablet (em pé ou deitado): moldura sóbria, sem chrome de SO ---------- */
+const TabletFrame = ({ surface, children }) => {
+  const { width: W, height: H, moldura } = SURFACES[surface];
 
   return (
     <div style={{
-      width: W + 24, height: H + 24,
-      background: '#1A1A1F', borderRadius: 28, padding: 12,
+      width: W + moldura * 2, height: H + moldura * 2,
+      background: '#1A1A1F', borderRadius: 28, padding: moldura,
       boxShadow: 'var(--shadow-device)', flexShrink: 0,
     }}>
       <div style={{
@@ -114,7 +121,56 @@ const TabletFrame = ({ children }) => {
   );
 };
 
-/* ---------- Desktop: sem moldura, ocupa o espaço disponível ---------- */
+/* ---------- TV: borda fina, tela deitada, lida de longe ---------- */
+const TvFrame = ({ children }) => {
+  const { width: W, height: H, moldura } = SURFACES.tv;
+
+  return (
+    <div style={{
+      width: W + moldura * 2, height: H + moldura * 2,
+      background: '#0A0A0E', borderRadius: 10, padding: moldura,
+      boxShadow: 'var(--shadow-device)', flexShrink: 0,
+    }}>
+      <div style={{
+        width: W, height: H, background: 'var(--bg)',
+        overflow: 'auto', position: 'relative',
+      }}>
+        {children}
+      </div>
+    </div>
+  );
+};
+
+/* ---------- Totem: corpo alto em pé, tela de toque ---------- */
+const TotemFrame = ({ children }) => {
+  const { width: W, height: H, moldura } = SURFACES.totem;
+
+  return (
+    <div style={{
+      width: W + moldura * 2, height: H + moldura * 2,
+      background: '#1A1A1F', borderRadius: 36, padding: moldura,
+      boxShadow: 'var(--shadow-device)', flexShrink: 0,
+    }}>
+      <div style={{
+        width: W, height: H, background: 'var(--bg)',
+        borderRadius: 12, overflow: 'auto', position: 'relative',
+      }}>
+        {children}
+      </div>
+    </div>
+  );
+};
+
+const FRAME_POR_SUPERFICIE = {
+  ios: IosFrame,
+  android: AndroidFrame,
+  tablet: TabletFrame,
+  tabletDeitado: TabletFrame,
+  tv: TvFrame,
+  totem: TotemFrame,
+};
+
+/* ---------- Computador: sem moldura, ocupa o espaço disponível ---------- */
 const FreeSurface = ({ children }) => (
   <div style={{
     width: '100%', height: '100%',
@@ -125,33 +181,42 @@ const FreeSurface = ({ children }) => (
   </div>
 );
 
+/* Tamanho externo (tela + moldura). O computador não tem moldura e usa a referência. */
+const tamanhoComMoldura = (surface) => {
+  const especificacao = SURFACES[surface];
+  if (especificacao.kind === 'free') return DESKTOP_REFERENCIA;
+  return {
+    width: especificacao.width + especificacao.moldura * 2,
+    height: especificacao.height + especificacao.moldura * 2,
+  };
+};
+
 /* ---------- Escala para caber na área disponível ----------
    Sem isto, o frame estoura a viewport em tela pequena e a revisão vira scroll.
    Só reduz: ampliar distorceria a percepção de tamanho real. */
 const ScaledSurface = ({ surface, theme, avail, children }) => {
-  const spec = SURFACES[surface];
+  const especificacao = SURFACES[surface];
 
-  if (spec.kind === 'free') return <FreeSurface>{children}</FreeSurface>;
+  if (especificacao.kind === 'free') return <FreeSurface>{children}</FreeSurface>;
 
-  const outerW = spec.width + (surface === 'tablet' ? 24 : surface === 'ios' ? 18 : 6);
-  const outerH = spec.height + (surface === 'tablet' ? 24 : surface === 'ios' ? 18 : 6);
+  const { width: larguraExterna, height: alturaExterna } = tamanhoComMoldura(surface);
 
-  const margin = 48;
-  const availW = (avail && avail.width) || 0;
-  const availH = (avail && avail.height) || 0;
-  const scale = (availW && availH)
-    ? Math.min(1, (availW - margin) / outerW, (availH - margin) / outerH)
+  const margem = 48;
+  const larguraDisponivel = (avail && avail.width) || 0;
+  const alturaDisponivel = (avail && avail.height) || 0;
+  const escala = (larguraDisponivel && alturaDisponivel)
+    ? Math.min(1, (larguraDisponivel - margem) / larguraExterna, (alturaDisponivel - margem) / alturaExterna)
     : 1;
 
-  const Frame = surface === 'ios' ? IosFrame : surface === 'android' ? AndroidFrame : TabletFrame;
+  const Frame = FRAME_POR_SUPERFICIE[surface];
 
   return (
     <div style={{
-      width: outerW * scale, height: outerH * scale,
+      width: larguraExterna * escala, height: alturaExterna * escala,
       display: 'flex', alignItems: 'center', justifyContent: 'center',
     }}>
-      <div style={{ transform: `scale(${scale})`, transformOrigin: 'center center', flexShrink: 0 }}>
-        <Frame theme={theme}>{children}</Frame>
+      <div style={{ transform: `scale(${escala})`, transformOrigin: 'center center', flexShrink: 0 }}>
+        <Frame surface={surface} theme={theme}>{children}</Frame>
       </div>
     </div>
   );
@@ -163,14 +228,14 @@ const useElementSize = () => {
   const [size, setSize] = React.useState({ width: 0, height: 0 });
 
   React.useEffect(() => {
-    const node = ref.current;
-    if (!node) return;
-    const ro = new ResizeObserver((entries) => {
-      const r = entries[0].contentRect;
-      setSize({ width: r.width, height: r.height });
+    const elemento = ref.current;
+    if (!elemento) return;
+    const observador = new ResizeObserver((medicoes) => {
+      const retangulo = medicoes[0].contentRect;
+      setSize({ width: retangulo.width, height: retangulo.height });
     });
-    ro.observe(node);
-    return () => ro.disconnect();
+    observador.observe(elemento);
+    return () => observador.disconnect();
   }, []);
 
   return [ref, size];

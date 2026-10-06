@@ -3,7 +3,7 @@
 Scaffold genérico do padrão. Substitui Figma como fonte
 de verdade visual antes da implementação na stack real.
 
-Contrato completo: `~/.claude/prototipo-html/references/convencoes.md`.
+Contrato completo: `~/.claude/skills/prototipo-html/references/convencoes.md`.
 
 ## Uso
 
@@ -13,7 +13,7 @@ aplica a identidade visual e monta a primeira tela.
 Manualmente:
 
 ```bash
-cp -r ~/.claude/prototipo-html/template <raiz-de-prototipos>/<task-id>
+cp -r ~/.claude/skills/prototipo-html/template <raiz-de-prototipos>/<task-id>
 cd <raiz-de-prototipos>/<task-id>
 python3 -m http.server 8765
 ```
@@ -22,17 +22,19 @@ Precisa ser servido por HTTP — `file://` falha, porque o Babel busca os `.jsx`
 
 ## Como o showcase é organizado
 
-**Header:** só marca e `Protótipo | Showcase`. Não cresce com o número de telas.
+**Header:** marca, uma aba por superfície ou papel (de `visoes.jsx`) e
+`Protótipo | Showcase`. As abas rolam; o header não cresce com o número de telas.
 
-**Painel flutuante** (canto inferior direito): superfície (Desktop · Tablet · iOS ·
-Android), tema, os 8 estados visuais e reset. Fechado mostra o estado ativo; fecha com
-Esc ou clique fora.
+**Painel flutuante** (canto inferior direito): as superfícies da aba ativa, tema, os 8
+estados visuais e o offline, a rotina cuja contagem de toques começa, e reset. Fechado
+mostra o estado ativo; fecha com Esc ou clique fora.
 
-**Navegação:** router hash, como o app final navega — não abas. O modo Showcase troca
-para a grade com todas as telas lado a lado.
+**Navegação:** router hash entre telas, como o app final navega; as abas separam visões,
+nunca telas. O modo Showcase mostra as rotinas da aba, cada uma com as telas em ordem.
 
-As superfícies mobile existem mesmo em projeto web: ver a tela no celular é parte da
-revisão, não exclusividade de app nativo.
+**Endereço:** `?visao=&superficie=&tema=&estado=&modo=&idioma=` abre uma combinação, e
+`&print=1` esconde o chrome. `scripts/tirar-prints.sh` usa isso para os prints da
+conferência.
 
 ## Estrutura
 
@@ -42,15 +44,18 @@ revisão, não exclusividade de app nativo.
 - `components/data.jsx` — mocks e `DEFAULTS`; nunca PII real
 - `components/icons.jsx` — SVG inline, sem dependência externa
 - `components/ui.jsx` — primitivos: `Press`, `Button`, `Card`, `Field`, `Skeleton`,
-  `EmptyState`, `ErrorState`, hook `useT`
-- `components/device.jsx` — superfícies e device frames + escala para caber
+  `EmptyState`, `ErrorState`, `AvisoSemInternet`, `AvisoConexaoVoltou`, hook `useT`
+- `components/device.jsx` — superfícies (computador, tablet em pé e deitado, iOS,
+  Android, TV, totem), device frames e escala para caber
 - `components/router.jsx` — rotas hash e navegação
-- `components/painel.jsx` — painel de controle flutuante
+- `components/visoes.jsx` — abas, superfícies e tema de cada aba, rotinas e meta de toques
+- `components/painel.jsx` — painel de controle flutuante e contagem de toques
 - `components/telas.jsx` — telas de exemplo (substitua)
-- `components/app.jsx` — `Showcase`, mapa rota → tela, grade e `PrototypeErrorBoundary`
+- `components/app.jsx` — `Showcase`, mapa rota → tela, grade das rotinas, lista de prints
+  e `PrototypeErrorBoundary`
 
 Ordem de carregamento no `index.html` é obrigatória:
-`i18n → data → icons → ui → device → router → painel → <telas> → app`.
+`i18n → data → icons → ui → device → router → visoes → painel → <telas> → app`.
 
 ## Customizando
 
@@ -59,14 +64,17 @@ Ordem de carregamento no `index.html` é obrigatória:
 2. **Strings** — substitua as de exemplo em `i18n.jsx`. Projeto monolíngue: deixe só
    `pt-BR`.
 3. **Mocks** — troque `MOCK_USER` / `MOCK_ITEMS` em `data.jsx` pelos dados das telas.
-4. **Telas** — substitua `telas.jsx` por `components/<dominio>.jsx` e registre no
+4. **Abas e rotinas** — troque as duas abas de exemplo de `visoes.jsx` pelas do projeto
+   e declare cada rotina com as telas em ordem.
+5. **Telas** — substitua `telas.jsx` por `components/<dominio>.jsx` e registre no
    `index.html` **depois** de `painel.jsx` e **antes** de `app.jsx`. Cada tela recebe
-   `estado` e responde aos 8 estados visuais.
-5. **Rotas** — acrescente em `ROUTES` (`router.jsx`) e em `SCREEN_MAP` (`app.jsx`).
-6. **Cache-bust** — a cada alteração, incremente o `?v=` de todos os scripts do
+   `estado` e responde aos 8 estados visuais e ao offline.
+6. **Rotas** — acrescente em `ROUTES` (`router.jsx`) e em `SCREEN_MAP` (`app.jsx`).
+7. **Cache-bust** — a cada alteração, incremente o `?v=` de todos os scripts do
    `index.html`. Sem isso o browser serve a versão antiga e você revisa código velho.
 
 ## Estados cobertos
 
-As telas de exemplo demonstram os 8 obrigatórios: default, hover, focus, active,
-disabled, loading, empty, error. Preserve a cobertura ao substituir pelas telas reais.
+As telas de exemplo demonstram os 8 obrigatórios — default, hover, focus, active,
+disabled, loading, empty, error — e o offline (sem internet). Preserve a cobertura ao
+substituir pelas telas reais.

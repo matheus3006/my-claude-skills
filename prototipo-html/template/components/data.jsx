@@ -14,9 +14,8 @@ const MOCK_ITEMS = [
   { id: 3, label: 'Item exemplo 3', value: 30 },
 ];
 
+/* Superfície e tema de abertura vêm da aba ativa, em visoes.jsx. */
 const DEFAULTS = {
-  surface: 'desktop',
-  theme: 'light',
   estado: 'default',
   mode: 'prototype',
 };
