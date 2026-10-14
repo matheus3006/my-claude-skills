@@ -1,7 +1,7 @@
 # my-claude-skills
 
 Coleção pessoal de [Agent Skills](https://docs.claude.com/en/docs/claude-code/skills) para Claude Code.
-**49 skills.**
+**50 skills.**
 
 As skills não são avulsas — elas se encadeiam. [**FLUXOS.md**](FLUXOS.md) mostra o caminho de uma ideia solta
 até o código: mapa de decisões, protótipo, PRD, issues.
@@ -46,7 +46,7 @@ a que elas pertencem, para que uma skill não chegue sem as outras de que depend
 | Protótipo | `novo-prototipo`, `iniciar-prototipo`, `integrar-ao-prototipo`, `melhorar-prototipo`, `ajustar-detalhe-prototipo`, `auditar-prototipo`, `sincronizar-prototipo`, `portar-prototipo`, `prototipo-html` (apoio), `folha-de-respostas` |
 | Bencium | `bencium-impact-designer`, `bencium-controlled-ux-designer`, `bencium-innovative-ux-designer` |
 | Design de UI | `ui-ux-pro-max`, `ui-typography`, `emil-design-eng` |
-| Sessão e arquitetura | `nova-sessao`, `human-architect-mindset` |
+| Sessão, arquitetura e pesquisa | `nova-sessao`, `human-architect-mindset`, `deep-research` |
 
 ## Skills
 
@@ -64,6 +64,7 @@ a que elas pertencem, para que uma skill não chegue sem as outras de que depend
 | [`caveman`](caveman/) | > Ultra-compressed communication mode. Cuts token usage ~75% by dropping filler, articles, and pleasantries while keeping full technical accuracy. Use when u… |
 | [`codebase-design`](recomendada/codebase-design/) | Shared vocabulary for designing deep modules. Use when the user wants to design or improve a module's interface, find deepening opportunities, decide where a s… |
 | [`code-review`](recomendada/code-review/) | Review the changes since a fixed point along two axes: Standards (does the code follow this repo's documented coding standards?) and Spec (does the code match… |
+| [`deep-research`](recomendada/deep-research/) | Pesquisa profunda multi-fonte com triangulação e relatório com fonte por afirmação. Use quando o usuário pedir deep research, pesquisa profunda, levantamento… |
 | [`design-audit`](design-audit/) | > Premium UI/UX design audit and refinement skill. Conducts systematic visual audits of existing apps and produces phased, implementation-ready design plans.… |
 | [`diagnose`](diagnose/) | Disciplined diagnosis loop for hard bugs and performance regressions. Reproduce → minimise → hypothesise → instrument → fix → regression-test. Use when user… |
 | [`diagnosing-bugs`](recomendada/diagnosing-bugs/) | Diagnosis loop for hard bugs and performance regressions. Use when the user says "diagnose"/"debug this", or reports something broken/throwing/failing/slow. |
