@@ -1,7 +1,7 @@
 # my-claude-skills
 
 Coleção pessoal de [Agent Skills](https://docs.claude.com/en/docs/claude-code/skills) para Claude Code.
-**47 skills.**
+**49 skills.**
 
 As skills não são avulsas — elas se encadeiam. [**FLUXOS.md**](FLUXOS.md) mostra o caminho de uma ideia solta
 até o código: mapa de decisões, protótipo, PRD, issues.
@@ -42,7 +42,7 @@ a que elas pertencem, para que uma skill não chegue sem as outras de que depend
 
 | Família | Skills |
 |---|---|
-| Engenharia (do `/wayfinder` ao `/pr`) | `ask-matt`, `setup-matt-pocock-skills`, `wayfinder`, `grilling`, `grill-me`, `grill-with-docs`, `domain-modeling`, `codebase-design`, `research`, `prototype`, `handoff`, `to-spec`, `to-tickets`, `implement`, `implement-spec`, `tdd`, `triage`, `diagnosing-bugs`, `improve-codebase-architecture`, `retro`, `pr` |
+| Engenharia (do `/wayfinder` ao `/pr`) | `ask-matt`, `setup-matt-pocock-skills`, `wayfinder`, `grilling`, `grill-me`, `grill-with-docs`, `domain-modeling`, `codebase-design`, `research`, `prototype`, `handoff`, `to-spec`, `to-tickets`, `implement`, `implement-spec`, `tdd`, `triage`, `diagnosing-bugs`, `improve-codebase-architecture`, `code-review`, `retro`, `pr`, `writing-for-agents` |
 | Protótipo | `novo-prototipo`, `iniciar-prototipo`, `integrar-ao-prototipo`, `melhorar-prototipo`, `ajustar-detalhe-prototipo`, `auditar-prototipo`, `sincronizar-prototipo`, `portar-prototipo`, `prototipo-html` (apoio), `folha-de-respostas` |
 | Bencium | `bencium-impact-designer`, `bencium-controlled-ux-designer`, `bencium-innovative-ux-designer` |
 | Design de UI | `ui-ux-pro-max`, `ui-typography`, `emil-design-eng` |
@@ -63,6 +63,7 @@ a que elas pertencem, para que uma skill não chegue sem as outras de que depend
 | [`bencium-innovative-ux-designer`](recomendada/bencium-innovative-ux-designer/) | Create distinctive, production-grade frontend interfaces with high design quality. Use this skill when the user asks to build web components, pages, or appli… |
 | [`caveman`](caveman/) | > Ultra-compressed communication mode. Cuts token usage ~75% by dropping filler, articles, and pleasantries while keeping full technical accuracy. Use when u… |
 | [`codebase-design`](recomendada/codebase-design/) | Shared vocabulary for designing deep modules. Use when the user wants to design or improve a module's interface, find deepening opportunities, decide where a s… |
+| [`code-review`](recomendada/code-review/) | Review the changes since a fixed point along two axes: Standards (does the code follow this repo's documented coding standards?) and Spec (does the code match… |
 | [`design-audit`](design-audit/) | > Premium UI/UX design audit and refinement skill. Conducts systematic visual audits of existing apps and produces phased, implementation-ready design plans.… |
 | [`diagnose`](diagnose/) | Disciplined diagnosis loop for hard bugs and performance regressions. Reproduce → minimise → hypothesise → instrument → fix → regression-test. Use when user… |
 | [`diagnosing-bugs`](recomendada/diagnosing-bugs/) | Diagnosis loop for hard bugs and performance regressions. Use when the user says "diagnose"/"debug this", or reports something broken/throwing/failing/slow. |
@@ -98,6 +99,7 @@ a que elas pertencem, para que uma skill não chegue sem as outras de que depend
 | [`ui-typography`](recomendada/ui-typography/) | > Professional typography rules for UI design, web applications, software interfaces, and all screen-based text. Enforces timeless typographic correctness th… |
 | [`ui-ux-pro-max`](recomendada/ui-ux-pro-max/) | UI/UX design intelligence for web and mobile. Includes 50+ styles, 161 color palettes, 57 font pairings, 161 product types, 99 UX guidelines, and 25 chart ty… |
 | [`wayfinder`](recomendada/wayfinder/) | Plan a huge chunk of work — more than one agent session can hold — as a shared map of decision tickets on your issue tracker, and resolve them one at a time un… |
+| [`writing-for-agents`](recomendada/writing-for-agents/) | Writing documents for agents. Use when creating or editing skills, or modifying AGENTS.md or CLAUDE.md. |
 | [`write-a-skill`](write-a-skill/) | Create new agent skills with proper structure, progressive disclosure, and bundled resources. Use when user wants to create, write, or build a new skill. |
 | [`writing-great-skills`](writing-great-skills/) | Reference for writing and editing skills well — the vocabulary and principles that make a skill predictable. |
 | [`zoom-out`](zoom-out/) | Tell the agent to zoom out and give broader context or a higher-level perspective. Use when you're unfamiliar with a section of code or need to understand ho… |
