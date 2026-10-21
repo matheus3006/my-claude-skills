@@ -1,7 +1,7 @@
 # my-claude-skills
 
 Coleção pessoal de [Agent Skills](https://docs.claude.com/en/docs/claude-code/skills) para Claude Code.
-**50 skills.**
+**51 skills.**
 
 As skills não são avulsas — elas se encadeiam. [**FLUXOS.md**](FLUXOS.md) mostra o caminho de uma ideia solta
 até o código: mapa de decisões, protótipo, PRD, issues.
@@ -89,6 +89,7 @@ a que elas pertencem, para que uma skill não chegue sem as outras de que depend
 | [`prototype`](recomendada/prototype/) | Build a throwaway prototype to answer a design question. Use when the user wants to sanity-check whether a state model or logic feels right, or explore what a … |
 | [`pr`](recomendada/pr/) | Shape of a PR body: smallest visual that shows the change, before/after evidence, one-way or two-way door. |
 | [`research`](recomendada/research/) | Investigate a question against high-trust primary sources and capture the findings as a Markdown file in the repo. Use when the user wants a topic researched, … |
+| [`resumo-trabalho`](resumo-trabalho/) | Resumo do trabalho de um período, agrupado pelas partes do produto, para quem não lê código. Pergunta quantos dias resumir antes de buscar. |
 | [`retro`](recomendada/retro/) | Retrospective on a coding session: suggests changes to the agent environment, not the code. |
 | [`setup-matt-pocock-skills`](recomendada/setup-matt-pocock-skills/) | Configure this repo for the engineering skills — set up its issue tracker, triage label vocabulary, and domain doc layout. Run once before first use of the oth… |
 | [`sincronizar-prototipo`](recomendada/sincronizar-prototipo/) | Reflete uma tela já aprovada no protótipo consolidado (vitrine) para evitar drift, faz o bump do cache-bust em todos os scripts e revalida a ordem de carregame… |
