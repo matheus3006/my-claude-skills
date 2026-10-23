@@ -1,7 +1,7 @@
 # my-claude-skills
 
 Coleção pessoal de [Agent Skills](https://docs.claude.com/en/docs/claude-code/skills) para Claude Code.
-**51 skills.**
+**52 skills.**
 
 As skills não são avulsas — elas se encadeiam. [**FLUXOS.md**](FLUXOS.md) mostra o caminho de uma ideia solta
 até o código: mapa de decisões, protótipo, PRD, issues.
@@ -46,7 +46,7 @@ a que elas pertencem, para que uma skill não chegue sem as outras de que depend
 | Protótipo | `novo-prototipo`, `iniciar-prototipo`, `integrar-ao-prototipo`, `melhorar-prototipo`, `ajustar-detalhe-prototipo`, `auditar-prototipo`, `sincronizar-prototipo`, `portar-prototipo`, `prototipo-html` (apoio), `folha-de-respostas` |
 | Bencium | `bencium-impact-designer`, `bencium-controlled-ux-designer`, `bencium-innovative-ux-designer` |
 | Design de UI | `ui-ux-pro-max`, `ui-typography`, `emil-design-eng` |
-| Sessão, arquitetura e pesquisa | `nova-sessao`, `human-architect-mindset`, `deep-research` |
+| Sessão, arquitetura e pesquisa | `nova-sessao`, `voltar-a-principal`, `human-architect-mindset`, `deep-research` |
 
 ## Skills
 
@@ -100,6 +100,7 @@ a que elas pertencem, para que uma skill não chegue sem as outras de que depend
 | [`triage`](recomendada/triage/) | Move issues and external PRs through a state machine of triage roles — categorise, verify, grill if needed, and write agent-ready briefs. |
 | [`ui-typography`](recomendada/ui-typography/) | > Professional typography rules for UI design, web applications, software interfaces, and all screen-based text. Enforces timeless typographic correctness th… |
 | [`ui-ux-pro-max`](recomendada/ui-ux-pro-max/) | UI/UX design intelligence for web and mobile. Includes 50+ styles, 161 color palettes, 57 font pairings, 161 product types, 99 UX guidelines, and 25 chart ty… |
+| [`voltar-a-principal`](recomendada/voltar-a-principal/) | Fecha esta sessão de trabalho atualizando o HANDOFF do projeto com o que foi feito, valida o trabalho e o handoff, e entrega uma mensagem de copiar e colar p… |
 | [`wayfinder`](recomendada/wayfinder/) | Plan a huge chunk of work — more than one agent session can hold — as a shared map of decision tickets on your issue tracker, and resolve them one at a time un… |
 | [`writing-for-agents`](recomendada/writing-for-agents/) | Writing documents for agents. Use when creating or editing skills, or modifying AGENTS.md or CLAUDE.md. |
 | [`write-a-skill`](write-a-skill/) | Create new agent skills with proper structure, progressive disclosure, and bundled resources. Use when user wants to create, write, or build a new skill. |
