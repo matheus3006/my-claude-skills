@@ -1,7 +1,10 @@
 # my-claude-skills
 
 Coleção pessoal de [Agent Skills](https://docs.claude.com/en/docs/claude-code/skills) para Claude Code.
-**52 skills.**
+**57 skills.**
+
+> Personal collection of 57 Agent Skills for Claude Code, covering the path from a loose idea to code:
+> decision map, prototype, spec, tickets, implementation and review. See [FLUXOS.md](FLUXOS.md) for how they chain together.
 
 As skills não são avulsas — elas se encadeiam. [**FLUXOS.md**](FLUXOS.md) mostra o caminho de uma ideia solta
 até o código: mapa de decisões, protótipo, PRD, issues.
@@ -130,3 +133,7 @@ Arquivos de apoio, compartilhados pelas oito:
 - [`prototipo-html/references/checklist-qualidade.md`](recomendada/prototipo-html/references/checklist-qualidade.md) — o roteiro da auditoria
 - [`prototipo-html/references/deteccao-projeto.md`](recomendada/prototipo-html/references/deteccao-projeto.md) — como descobrir a stack e a paleta do projeto
 - [`prototipo-html/template/`](recomendada/prototipo-html/template/) — o scaffold que `novo-prototipo` copia
+
+## Licença
+
+O conteúdo próprio está sob a licença [MIT](LICENSE). Skills adaptadas de terceiros continuam sujeitas à licença original do autor.
